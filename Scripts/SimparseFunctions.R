@@ -1,3 +1,6 @@
+library(ggplot2)
+library(tidyverse)
+
 #### Function to process sims by DEAP
 process_sims_tidy<-function(file=file) {
   
