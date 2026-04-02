@@ -1,7 +1,7 @@
 # Noise_Plasticity
 
-## Title: Environmental impacts on gene expression noise and its relationship with fitness 
+#### Manuscript Title: Environmental impacts on gene expression noise and its relationship with fitness 
 
-## Author : Taslima Haque
+#### Author : Taslima Haque
 
-## Last modified: 04/02/2026
+#### Last modified: 04/02/2026
