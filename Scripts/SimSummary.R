@@ -197,3 +197,63 @@ dev.off()
 png("Plots/Fig5.png",width=12,height = 8,units="in",res=300)
 Fig5
 dev.off()
+
+######## Supplementary figure 5
+HSumFitness_NM<- process_sims("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
+                              Relmean = 1, RelSD = 0.05) %>% 
+  mutate(Function="Gaussian")
+
+HSumFitness_LN<-process_sims("Data/Simultions/Python/DEAPSimOut/LogNormal_Constant_G_c90_Fitvar1_0.5_Fitvar2_0.7.csv",
+                             Relmean = 1, RelSD = 0.05) %>% 
+  mutate(Function="LogNormal")
+
+HSumFitness_MN<- process_sims("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w0.6.csv",
+                              Relmean = 0.5, RelSD = 0.05) %>% 
+  mutate(Function="Mixed-Gaussian")
+
+HSumFitness_MLN<- process_sims("Data/Simultions/Python/DEAPSimOut/LogNormal_Constant_G_c90_Fitvar1_0.5_0.07_Fitvar2_0.25_0.75_w0.5.csv",
+                               Relmean = 1.5, RelSD = 0.05) %>% 
+  mutate(Function="Mixed-LogNormal")
+
+
+HSumFitness <-rbind(HSumFitness_NM, HSumFitness_LN, 
+                    HSumFitness_MN, HSumFitness_MLN) %>% 
+  mutate(Function=factor(Function, 
+                         levels=c("Gaussian", "LogNormal", "Mixed-Gaussian", "Mixed-LogNormal"))) %>% 
+  mutate(Mean=100*Mean) %>% 
+  mutate(ExNoise = as.numeric(as.character(Noise))) %>% 
+  filter(ExNoise <= 1600)
+
+(FigS6<-ggplot(HSumFitness, aes(y=Fitness, x=Mean))+
+    geom_line(aes(y=Fitness, x=Mean, group=Noise, color=Noise),size=1)+
+    geom_point(aes(y=Fitness, x=Mean, color=Noise), shape=21, size=1)+
+    geom_linerange(aes(color=Noise,
+                       ymin=Fitness-1.96*Fitness_se, ymax=Fitness+1.96*Fitness_se),show.legend = T)+
+    #geom_hline(yintercept = c(1,0.875,0.855), color="red3",lty=2)+
+    #scale_colour_gradient(low = "#4040a1", high = "firebrick")+
+    scale_color_brewer(palette = "Paired")+
+    labs(x="Relative Expression (%)", 
+         y="Relative Fitness", color="Relative Noise (%)")+
+    facet_wrap(Function~Heritability, scales = "free_y" )+
+    theme_classic()+
+    theme(axis.title = element_text(size = 14),
+          legend.title = element_text(size=10,face="bold"),
+          legend.text= element_text(size=6),
+          legend.background = element_rect(fill = "transparent"),
+          legend.key.size = unit(0.3,"cm"),
+          #legend.position=c(0.7, 0.6),
+          axis.text = element_text(size=14),
+          panel.spacing.x =unit(0.15, "lines") , 
+          panel.spacing.y=unit(0.15,"lines"),
+          strip.text = element_text(size=12,face = "bold"),
+          strip.background = element_rect(
+            color="transparent", fill="grey90"))
+)
+
+tiff("Plots/SupFig_S5.tiff",width=12,height =8,units="in",res=300)
+FigS6
+dev.off()
+
+png("Plots/SupFig_S5.png",width=12,height = 8,units="in",res=300)
+FigS6
+dev.off()
