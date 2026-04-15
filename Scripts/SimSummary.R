@@ -224,7 +224,7 @@ HSumFitness <-rbind(HSumFitness_NM, HSumFitness_LN,
   mutate(ExNoise = as.numeric(as.character(Noise))) %>% 
   filter(ExNoise <= 1600)
 
-(FigS6<-ggplot(HSumFitness, aes(y=Fitness, x=Mean))+
+(FigS5<-ggplot(HSumFitness, aes(y=Fitness, x=Mean))+
     geom_line(aes(y=Fitness, x=Mean, group=Noise, color=Noise),size=1)+
     geom_point(aes(y=Fitness, x=Mean, color=Noise), shape=21, size=1)+
     geom_linerange(aes(color=Noise,
@@ -251,9 +251,9 @@ HSumFitness <-rbind(HSumFitness_NM, HSumFitness_LN,
 )
 
 tiff("Plots/SupFig_S5.tiff",width=12,height =8,units="in",res=300)
-FigS6
+FigS5
 dev.off()
 
 png("Plots/SupFig_S5.png",width=12,height = 8,units="in",res=300)
-FigS6
+FigS5
 dev.off()
