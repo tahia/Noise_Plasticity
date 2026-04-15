@@ -14,3 +14,20 @@ ParentDirectory:
            Plots
            Scripts
 ```
+
+#### Scipt Descriptions:
+```
+1. NoisePlasticitySummary.R    
+Script to test for noise plasticity across environments and get summary statistics
+
+
+3. PopsimExpFitDeapConstantNoise.py
+Run different simulations using DEAP package 
+
+4. SimparseFunctions.R
+Script with all the summary function to parse simulations
+
+5. SimSummary.R
+Generate and compare simulation summaries 
+
+```

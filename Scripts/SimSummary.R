@@ -2,6 +2,7 @@ library(ggplot2)
 library(tidyverse)
 
 setwd("/home/taslima/data/WittkoppLab/Research_Projects/PlasticNoise/")
+source("Scripts/SimparseFunctions.R")
 
 ###### Figure 4
 HSumFitness_NM<- process_sims("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
