@@ -5,3 +5,12 @@
 #### Author : Taslima Haque
 
 #### Last modified: 04/02/2026
+
+#### Directory structure:
+```
+ParentDirectory:
+           Data
+           Results
+           Plots
+           Scripts
+```
