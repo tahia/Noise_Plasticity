@@ -22,6 +22,8 @@ setwd("/home/taslima/data/WittkoppLab/Research_Projects/PlasticNoise/")
 # Y2682: Fitness REF for double
 # Y1177: Fitness deletion
 
+## Supplementary table 2-5 has raw data of expression in
+# Glucose, galactose, glycerol, and ethanol respectively
 #### Reference values
 datExpGluRef<-read.delim("Data/GLUCOSE.WHEEL.DATA.txt") %>% 
   dplyr::filter(STRAIN %in% c("Y1617", "Y978"))  
