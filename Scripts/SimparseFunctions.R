@@ -2,7 +2,7 @@ library(ggplot2)
 library(tidyverse)
 
 #### Function to process sims by DEAP
-process_sims_tidy<-function(file=file) {
+process_sims_tidy<-function(file=file,Relmean=Relmean, RelSD=RelSD) {
   
   colNames<-c("Initial_ExpMean","Initial_ExpSD","Fitfun","FIT_var1","FIT_var2",
               "Heritability","iteration","time","mean_doubling_time","SD","Fano","CV")
@@ -19,7 +19,7 @@ process_sims_tidy<-function(file=file) {
     select(Initial_ExpMean,Initial_ExpSD,Heritability, iteration,estimate,std.error)
   
   WTREF <-Dist1 %>% 
-    dplyr::filter(Initial_ExpMean==1 & Initial_ExpSD==0.1) %>% 
+    dplyr::filter(Initial_ExpMean==Relmean & Initial_ExpSD==RelSD) %>% 
     group_by(Heritability) %>% 
     summarise_all(funs(mean,sd, se =sd(.)/sqrt(n())))
   
@@ -33,13 +33,13 @@ process_sims_tidy<-function(file=file) {
     rename(Mean=Initial_ExpMean,
            SD=Initial_ExpSD, 
            Fitness=Fitness_mean) %>%
-    mutate(Noise=as.factor(100*SD/0.1) ) 
+    mutate(Noise=as.factor(100*SD/0.05) ) 
   
   return(SumFitness)
   
 }
 
-process_sims<-function(file=file) {
+process_sims<-function(file=file, Relmean=Relmean, RelSD=RelSD) {
   colNames<-c("Initial_ExpMean","Initial_ExpSD","Fitfun","FIT_var1","FIT_var2",
               "Heritability","iteration","time","mean_doubling_time","SD","Fano","CV")
   
@@ -59,7 +59,7 @@ process_sims<-function(file=file) {
   
   #WTREF: Mean 1 SD 0.1
   WTREF <-Dist1_T1_4 %>% 
-    dplyr::filter(Initial_ExpMean==1 & Initial_ExpSD==0.1) %>% 
+    dplyr::filter(Initial_ExpMean==Relmean & Initial_ExpSD==RelSD) %>% 
     group_by(Heritability) %>% 
     summarise_all(funs(mean,sd, se =sd(.)/sqrt(n())))
   
@@ -77,12 +77,12 @@ process_sims<-function(file=file) {
     rename(Mean=Initial_ExpMean,
            SD=Initial_ExpSD, 
            Fitness=Fitness_mean) %>%
-    mutate(Noise=as.factor(100*SD/0.1) ) 
+    mutate(Noise=as.factor(100*SD/0.05) ) 
   
   return(SumFitness)
 }
 
-process_sims_nosum<-function(file=file) {
+process_sims_nosum<-function(file=file,Relmean=Relmean, RelSD=RelSD) {
   colNames<-c("Initial_ExpMean","Initial_ExpSD","Fitfun","FIT_var1","FIT_var2",
               "Heritability","iteration","time","mean_doubling_time","SD","Fano","CV")
   
@@ -102,7 +102,7 @@ process_sims_nosum<-function(file=file) {
   
   #WTREF: Mean 1 SD 0.1
   WTREF <-Dist1_T1_4 %>% 
-    dplyr::filter(Initial_ExpMean==1 & Initial_ExpSD==0.1) %>% 
+    dplyr::filter(Initial_ExpMean==Relmean & Initial_ExpSD==RelSD) %>% 
     group_by(Heritability) %>% 
     summarise_all(funs(mean,sd, se =sd(.)/sqrt(n())))
   
@@ -115,7 +115,7 @@ process_sims_nosum<-function(file=file) {
     mutate(s= ((WTREF_DT4/DT4) -1)/3) %>% 
     #mutate(Fitness = WTREF_DT4/DT4 ) %>% 
     mutate(Fitness = 1+s ) %>% 
-    mutate(Noise=as.factor(100*Initial_ExpSD/0.1) ) 
+    mutate(Noise=as.factor(100*Initial_ExpSD/0.05) ) 
   
   return(Fitness)
 }
