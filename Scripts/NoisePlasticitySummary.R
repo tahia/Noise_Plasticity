@@ -400,3 +400,11 @@ dev.off()
 png("Plots/Fig1_3.png",width=8,height=6,units="in",res=300)
 Fig1_3
 dev.off()
+
+# Test for significance of higher noise plasticity between envs with higher growth rate difference
+mod <- lm(estimate ~ contrast, data=pairwise_df)
+emm_plastic <- emmeans(mod, ~ contrast)
+
+plastic_noise<-test(emm_plastic, null = 0, adjust="none")
+
+test(emm_plastic, null = 0, adjust="none")$p.value
