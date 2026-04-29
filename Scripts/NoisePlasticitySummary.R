@@ -176,41 +176,52 @@ plot(datExpGlu$YFP.SD.FINAL, datExpGal$YFP.SD.FINAL,col="firebrick",
      xlab="Glucose",ylab="Galactose",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpGal$YFP.SD.FINAL ~ datExpGlu$YFP.SD.FINAL), col = "black", lty = 2)+
-  #text(paste("r = ", round(cor(datExpGlu$YFP.SD.FINAL, datExpGal$YFP.SD.FINAL), 2)), 
-  #     x = 0.05, y = 0.4, col = "navy", cex=1.5)
-  text(paste("slope = ", round(as.numeric(lm(datExpGlu$YFP.SD.FINAL ~datExpGal$YFP.SD.FINAL)$coefficients[2]), 2)), 
+  text(paste("r=", round(cor(datExpGlu$YFP.SD.FINAL, datExpGal$YFP.SD.FINAL), 2)), 
+       x = 0.35, y = 0.25, col = "navy", cex=1.5)+
+  text(paste("slope=", round(as.numeric(lm(datExpGal$YFP.SD.FINAL ~datExpGlu$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGlu$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL,col="firebrick",
      xlab="Glucose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpGly$YFP.SD.FINAL ~ datExpGlu$YFP.SD.FINAL), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGlu$YFP.SD.FINAL~ datExpGly$YFP.SD.FINAL)$coefficients[2]), 2)), 
+  text(paste("r=", round(cor(datExpGlu$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL), 2)), 
+       x = 0.35, y = 0.25, col = "navy", cex=1.5)+
+  text(paste("slope=", round(as.numeric(lm(datExpGly$YFP.SD.FINAL~ datExpGlu$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGlu$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL,col="firebrick",
      xlab="Glucose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpEth$YFP.SD.FINAL ~ datExpGlu$YFP.SD.FINAL), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGlu$YFP.SD.FINAL ~ datExpEth$YFP.SD.FINAL)$coefficients[2]), 2)), 
+  text(paste("r=", round(cor(datExpGlu$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL), 2)), 
+       x = 0.35, y = 0.25, col = "navy", cex=1.5)+
+  text(paste("slope=", round(as.numeric(lm(datExpEth$YFP.SD.FINAL ~ datExpGlu$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGal$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL,col="firebrick",
      xlab="Galactose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpGly$YFP.SD.FINAL ~ datExpGal$YFP.SD.FINAL), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGal$YFP.SD.FINAL ~ datExpGly$YFP.SD.FINAL)$coefficients[2]), 2)), 
+  text(paste("r=", round(cor(datExpGal$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL), 2)), 
+       x = 0.35, y = 0.25, col = "navy", cex=1.5)+
+  text(paste("slope=", round(as.numeric(lm(datExpGly$YFP.SD.FINAL ~ datExpGal$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGal$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL,col="firebrick",
      xlab="Galactose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpEth$YFP.SD.FINAL ~ datExpGal$YFP.SD.FINAL), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGal$YFP.SD.FINAL ~ datExpEth$YFP.SD.FINAL)$coefficients[2]), 2)), 
+  text(paste("r=", round(cor(datExpGal$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL), 2)), 
+       x = 0.35, y = 0.25, col = "navy", cex=1.5)+
+  text(paste("slope=", round(as.numeric(lm(datExpEth$YFP.SD.FINAL ~ datExpGal$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGly$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL,col="firebrick",
      xlab="Glycerol",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpEth$YFP.SD.FINAL ~ datExpGly$YFP.SD.FINAL), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGly$YFP.SD.FINAL ~ datExpEth$YFP.SD.FINAL)$coefficients[2]), 2)), 
+  text(paste("r=", round(cor(datExpGly$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL), 2)), 
+       x = 0.4, y = 0.25, col = "navy", cex=1.5)+
+  text(paste("slope=", round(as.numeric(lm(datExpEth$YFP.SD.FINAL ~ datExpGly$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 dev.off()
+
 
 ## FANO
 datExpGlu$NoiseF<-datExpGlu$YFP.SD.FINAL^2/datExpGlu$YFP.MEDIAN.FINAL
@@ -227,90 +238,114 @@ datExpEth$NoiseCV<-datExpEth$YFP.SD.FINAL/datExpEth$YFP.MEDIAN.FINAL
 #### FANO
 #tiff("Plots/SupFig_S1.tiff",width=10,height=6,units="in",res=300)
 png("Plots/SupFig_S1.png",width=10,height=6,units="in",res=300)
-par(mfrow=c(2,3), mar=newmar)
+par(mfrow=c(2,3), mar=newmar, oma=c(0,0,2,0))
 plot(datExpGlu$NoiseF, datExpGal$NoiseF,col="firebrick",
      xlab="Glucose",ylab="Galactose",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpGal$NoiseF ~ datExpGlu$NoiseF), col = "black", lty = 2)+
-  #text(paste("r = ", round(cor(datExpGlu$YFP.SD.FINAL, datExpGal$YFP.SD.FINAL), 2)), 
-  #     x = 0.05, y = 0.4, col = "navy", cex=1.5)
-  text(paste("slope = ", round(as.numeric(lm(datExpGlu$NoiseF ~datExpGal$NoiseF)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGlu$NoiseF, datExpGal$NoiseF), 2)),
+       x = 0.15, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpGal$NoiseF ~datExpGly$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGlu$NoiseF, datExpGly$NoiseF,col="firebrick",
      xlab="Glucose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpGly$NoiseF ~ datExpGlu$NoiseF), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGlu$NoiseF~ datExpGly$NoiseF)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGlu$NoiseF, datExpGly$NoiseF), 2)),
+       x = 0.15, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpGly$NoiseF~ datExpGlu$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGlu$NoiseF, datExpEth$NoiseF,col="firebrick",
      xlab="Glucose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpEth$NoiseF ~ datExpGlu$NoiseF), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGlu$NoiseF ~ datExpEth$NoiseF)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGlu$NoiseF, datExpEth$NoiseF), 2)),
+       x = 0.15, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpEth$NoiseF ~ datExpGlu$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGal$NoiseF, datExpGly$NoiseF,col="firebrick",
      xlab="Galactose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpGly$NoiseF ~ datExpGal$NoiseF), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGal$NoiseF ~ datExpGly$NoiseF)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGal$NoiseF, datExpGly$NoiseF), 2)),
+       x = 0.15, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpGly$NoiseF ~ datExpGal$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGal$NoiseF, datExpEth$NoiseF,col="firebrick",
      xlab="Galactose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpEth$NoiseF ~ datExpGal$NoiseF), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGal$NoiseF ~ datExpEth$NoiseF)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGal$NoiseF, datExpEth$NoiseF), 2)),
+       x = 0.15, y = 0.1, col = "navy", cex=1.5)+
+  text(paste("slope=", round(as.numeric(lm(datExpEth$NoiseF ~ datExpGal$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGly$NoiseF, datExpEth$NoiseF,col="firebrick",
      xlab="Glycerol",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpEth$NoiseF ~ datExpGly$NoiseF), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGly$NoiseF ~ datExpEth$NoiseF)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGly$NoiseF, datExpEth$NoiseF), 2)),
+       x = 0.15, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpEth$NoiseF ~ datExpGly$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
+mtext("Pairwise expression noise (Fano Factor) among different environments", side=3, line=0, outer=TRUE, cex=1.5, font=2)
+
 dev.off()
 
 
 ### CV
 #tiff("Plots/SupFig_S2.tiff",width=10,height=6,units="in",res=300)
 png("Plots/SupFig_S2.png",width=10,height=6,units="in",res=300)
-par(mfrow=c(2,3), mar=newmar)
+par(mfrow=c(2,3), mar=newmar,oma=c(0,0,2,0))
 plot(datExpGlu$NoiseCV, datExpGal$NoiseCV,col="firebrick",
      xlab="Glucose",ylab="Galactose",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpGal$NoiseCV ~ datExpGlu$NoiseCV), col = "black", lty = 2)+
-  #text(paste("r = ", round(cor(datExpGlu$YFP.SD.FINAL, datExpGal$YFP.SD.FINAL), 2)), 
-  #     x = 0.05, y = 0.4, col = "navy", cex=1.5)
-  text(paste("slope = ", round(as.numeric(lm(datExpGlu$NoiseCV ~datExpGal$NoiseCV)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGlu$NoiseCV, datExpGal$NoiseCV), 2)),
+       x = 0.18, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpGal$NoiseCV ~datExpGlu$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGlu$NoiseCV, datExpGly$NoiseCV,col="firebrick",
      xlab="Glucose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpGly$NoiseCV ~ datExpGlu$NoiseCV), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGlu$NoiseCV~ datExpGly$NoiseCV)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGlu$NoiseCV, datExpGly$NoiseCV), 2)),
+       x = 0.18, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpGly$NoiseCV~ datExpGlu$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGlu$NoiseCV, datExpEth$NoiseCV,col="firebrick",
      xlab="Glucose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpEth$NoiseCV ~ datExpGlu$NoiseCV), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGlu$NoiseCV ~ datExpEth$NoiseCV)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGlu$NoiseCV, datExpEth$NoiseCV), 2)),
+       x = 0.18, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpEth$NoiseCV ~ datExpGlu$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGal$NoiseCV, datExpGly$NoiseCV,col="firebrick",
      xlab="Galactose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpGly$NoiseCV ~ datExpGal$NoiseCV), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGal$NoiseCV ~ datExpGly$NoiseCV)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGal$NoiseCV, datExpGly$NoiseCV), 2)),
+       x = 0.18, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpGly$NoiseCV ~ datExpGal$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGal$NoiseCV, datExpEth$NoiseCV,col="firebrick",
      xlab="Galactose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpEth$NoiseCV ~ datExpGal$NoiseCV), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGal$NoiseCV ~ datExpEth$NoiseCV)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGal$NoiseCV, datExpEth$NoiseCV), 2)),
+       x = 0.18, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpEth$NoiseCV ~ datExpGal$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGly$NoiseCV, datExpEth$NoiseCV,col="firebrick",
      xlab="Glycerol",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpEth$NoiseCV ~ datExpGly$NoiseCV), col = "black", lty = 2)+
-  text(paste("slope = ", round(as.numeric(lm(datExpGly$NoiseCV ~ datExpEth$NoiseCV)$coefficients[2]), 2)), 
+  text(paste0("r=", round(cor(datExpGly$NoiseCV, datExpEth$NoiseCV), 2)),
+       x = 0.18, y = 0.1, col = "navy", cex=1.5)+
+  text(paste0("slope=", round(as.numeric(lm(datExpEth$NoiseCV ~ datExpGly$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
+mtext("Pairwise expression noise (CV) among different environments", side=3, line=0, outer=TRUE, cex=1.5, font=2)
+
 dev.off()
 
 # back to default
