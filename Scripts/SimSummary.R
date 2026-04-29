@@ -4,7 +4,35 @@ library(tidyverse)
 setwd("/home/taslima/data/WittkoppLab/Research_Projects/PlasticNoise/")
 source("Scripts/SimparseFunctions.R")
 
-###### Figure 4
+######## Figure 4
+seed(123456)
+#low noise
+ggplot()+ 
+  geom_density(aes(x=rnorm(200000,mean = 1,sd=0.05)), size=8, color="#A7DE70")+
+  theme_classic()+
+  labs(x="", y="")+ 
+  scale_x_continuous(limits = c(0,2))+
+  scale_y_continuous(limits = c(0,8))+
+  theme(axis.text = element_blank(), 
+        #axis.text.x = element_text(size=40, color="black", face="bold"), 
+        axis.ticks.y = element_blank(),
+        axis.line= element_line(size = 4, color="grey50"), 
+        panel.background = element_rect(fill = "transparent"))
+
+#high noise
+ggplot()+ 
+  geom_density(aes(x=rnorm(200000,mean = 1,sd=0.25)), size=8, color="#C76E00")+
+  theme_classic()+
+  labs(x="", y="")+ 
+  scale_x_continuous(limits = c(0,2))+
+  scale_y_continuous(limits = c(0,8))+
+  theme(axis.text = element_blank(), 
+        #axis.text.x = element_text(size=40, color="black", face="bold"), 
+        axis.ticks.y = element_blank(), 
+        axis.line= element_line(size = 4, color="grey50"), 
+        panel.background = element_rect(fill = "transparent"))
+
+###### Figure 5
 HSumFitness_NM<- process_sims("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
                               Relmean = 1, RelSD = 0.05) %>% 
   mutate(Function="Gaussian") %>% 

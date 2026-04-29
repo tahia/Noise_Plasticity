@@ -8,6 +8,7 @@ import pandas as pd
 from scipy.stats import norm, lognorm
 from deap import base, creator, tools
 
+
 # =====================================================
 # Argument parsing
 # =====================================================
@@ -15,9 +16,13 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Simulate expression-based evolution with heritability"
     )
-    parser.add_argument("--EXPR_MEAN", type=float, required=True,
+    parser.add_argument("--EXPR_MEAN_A", type=float, required=True,
                         help="Mean expression of initial population")
-    parser.add_argument("--EXPR_SD", type=float, required=True,
+    parser.add_argument("--EXPR_SD_A", type=float, required=True,
+                        help="Expression SD of initial population")
+    parser.add_argument("--EXPR_MEAN_B", type=float, required=True,
+                        help="Mean expression of initial population")
+    parser.add_argument("--EXPR_SD_B", type=float, required=True,
                         help="Expression SD of initial population")
     parser.add_argument("--FIT_var1", type=float, required=True,
                         help="Mean (optimal) expression for fitness function")
@@ -50,22 +55,10 @@ def parse_args():
 
 
 # =====================================================
-# Main simulation
+# Fitness functions
 # =====================================================
-def main(args):
+def build_doubling_time(args, EXPR_MIN, EXPR_MAX):
 
-    # -----------------------------
-    # Reproducibility
-    # -----------------------------
-    random.seed(42)
-    np.random.seed(42)
-
-    EXPR_MIN = 0.01
-    EXPR_MAX = 2.0
-
-    # -----------------------------
-    # Fitness functions
-    # -----------------------------
     if args.fitness_function == "gaussian":
         pdf_grid = norm.pdf(
             np.arange(EXPR_MIN, EXPR_MAX + 0.01, 0.01),
@@ -73,62 +66,81 @@ def main(args):
             scale=args.FIT_var2,
         )
         c = 112 / pdf_grid.max()
-        #c = 56 / pdf_grid.max()
-        #c = 90 / pdf_grid.max()
 
         def doubling_time(x):
-            #return 240 - c * norm.pdf(
-            #    x, loc=args.FIT_var1, scale=args.FIT_var2
-            #)
-            return 191 - c * norm.pdf(
-                x, loc=args.FIT_var1, scale=args.FIT_var2
-            )
-            
+            return 191 - c * norm.pdf(x, loc=args.FIT_var1, scale=args.FIT_var2)
+
     elif args.fitness_function == "lognorm":
         pdf_grid = lognorm.pdf(
             np.arange(EXPR_MIN, EXPR_MAX + 0.01, 0.01),
-            scale=np.exp(args.FIT_var1), 
-            loc=0, 
-            s= args.FIT_var2
+            scale=np.exp(args.FIT_var1),
+            loc=0,
+            s=args.FIT_var2,
         )
         c = 90 / pdf_grid.max()
 
         def doubling_time(x):
             return 160 - c * lognorm.pdf(
-                x, scale=np.exp(args.FIT_var1), loc=0, s= args.FIT_var2
+                x, scale=np.exp(args.FIT_var1), loc=0, s=args.FIT_var2
             )
 
     elif args.fitness_function == "mixednorm":
-        weights = [args.weight, (1-args.weight)]
+        weights = [args.weight, 1 - args.weight]
         EXP = np.arange(EXPR_MIN, EXPR_MAX + 0.01, 0.01)
-        pdf_grid = (weights[0] * norm.pdf(EXP, loc=args.FIT_var1, scale=args.FIT_var2) + 
-             weights[1] * norm.pdf(EXP, loc=args.FIT_var1_pair, scale=args.FIT_var2_pair))/2
+
+        pdf_grid = (
+            weights[0] * norm.pdf(EXP, args.FIT_var1, args.FIT_var2)
+            + weights[1] * norm.pdf(EXP, args.FIT_var1_pair, args.FIT_var2_pair)
+        ) / 2
 
         c = 90 / pdf_grid.max()
 
-
         def doubling_time(x):
-                    return 160 - c * ((weights[0] * norm.pdf(x, loc=args.FIT_var1, scale=args.FIT_var2) + 
-                     weights[1] * norm.pdf(x, loc=args.FIT_var1_pair, scale=args.FIT_var2_pair))/2)
-
+            return 160 - c * (
+                weights[0] * norm.pdf(x, args.FIT_var1, args.FIT_var2)
+                + weights[1] * norm.pdf(x, args.FIT_var1_pair, args.FIT_var2_pair)
+            ) / 2
 
     elif args.fitness_function == "mixedlognorm":
-        weights = [args.weight, (1-args.weight)]
+        weights = [args.weight, 1 - args.weight]
         EXP = np.arange(EXPR_MIN, EXPR_MAX + 0.01, 0.01)
-        pdf_grid = (weights[0] * lognorm.pdf(EXP, scale=np.exp(args.FIT_var1), s=args.FIT_var2, loc=0) + 
-             weights[1] * lognorm.pdf(EXP, scale=np.exp(args.FIT_var1_pair), s=args.FIT_var2_pair, loc=0))/2
+
+        pdf_grid = (
+            weights[0] * lognorm.pdf(EXP, s=args.FIT_var2, scale=np.exp(args.FIT_var1))
+            + weights[1]
+            * lognorm.pdf(EXP, s=args.FIT_var2_pair, scale=np.exp(args.FIT_var1_pair))
+        ) / 2
 
         c = 90 / pdf_grid.max()
 
-
         def doubling_time(x):
-                    return 160 - c * ((weights[0] * lognorm.pdf(x, scale=np.exp(args.FIT_var1), s=args.FIT_var2, loc=0) + 
-                     weights[1] * lognorm.pdf(x, scale=np.exp(args.FIT_var1_pair), s=args.FIT_var2_pair, loc=0))/2)
+            return 160 - c * (
+                weights[0]
+                * lognorm.pdf(x, s=args.FIT_var2, scale=np.exp(args.FIT_var1))
+                + weights[1]
+                * lognorm.pdf(
+                    x, s=args.FIT_var2_pair, scale=np.exp(args.FIT_var1_pair)
+                )
+            ) / 2
 
-
-        
     else:
-        raise ValueError(f"Unknown fitness function: {args.fitness_function}")
+        raise ValueError("Unknown fitness function")
+
+    return doubling_time
+
+
+# =====================================================
+# Main simulation
+# =====================================================
+def main(args):
+
+    random.seed(42)
+    np.random.seed(42)
+
+    EXPR_MIN = 0.01
+    EXPR_MAX = 2.0
+
+    doubling_time = build_doubling_time(args, EXPR_MIN, EXPR_MAX)
 
     # -----------------------------
     # DEAP setup
@@ -139,17 +151,6 @@ def main(args):
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
     toolbox = base.Toolbox()
-    toolbox.register(
-        "expression", random.gauss, args.EXPR_MEAN, args.EXPR_SD
-    )
-    toolbox.register(
-        "individual",
-        tools.initRepeat,
-        creator.Individual,
-        toolbox.expression,
-        n=1
-    )
-    toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("select", tools.selRoulette)
 
     def fitness(ind):
@@ -158,87 +159,132 @@ def main(args):
     toolbox.register("evaluate", fitness)
 
     # -----------------------------
-    # Run simulations
+    # Simulation
     # -----------------------------
     records = []
 
     for it in range(1, args.iterations + 1):
-        population = toolbox.population(n=args.pop_size)
 
+        # Initialize two populations
+        population = []
+
+        for _ in range(args.pop_size):
+            ind = creator.Individual([random.gauss(args.EXPR_MEAN_A, args.EXPR_SD_A)])
+            ind.label = "A"
+            population.append(ind)
+
+        for _ in range(args.pop_size):
+            ind = creator.Individual([random.gauss(args.EXPR_MEAN_B, args.EXPR_SD_B)])
+            ind.label = "B"
+            population.append(ind)
+
+        # Evaluate initial fitness
         for ind in population:
             ind.fitness.values = toolbox.evaluate(ind)
 
         time = 0.0
 
         while time <= args.total_time:
+
             expressions = np.array([ind[0] for ind in population])
+            labels = np.array([ind.label for ind in population])
 
-            mean_expr = expressions.mean()
-            var_expr = expressions.var()
-            sd_expr = np.sqrt(var_expr)
-
+            def stats(mask):
+                subset = expressions[mask]
+                if len(subset) == 0:
+                    return np.nan, np.nan
+                return subset.mean(), subset.std()
+            
             dt_vals = doubling_time(expressions)
-            mean_dt = dt_vals.mean()
 
-            cv_expr = sd_expr / mean_expr if mean_expr > 0 else np.nan
-            fano_expr = var_expr / mean_expr if mean_expr > 0 else np.nan
+            def mean_dt_for(mask):
+                subset = dt_vals[mask]
+                return subset.mean() if len(subset) > 0 else np.nan
+
+            mean_A, sd_A = stats(labels == "A")
+            mean_B, sd_B = stats(labels == "B")
+
+            freq_A = np.mean(labels == "A")
+            freq_B = np.mean(labels == "B")
+
+            mean_dt_A = mean_dt_for(labels == "A")
+            mean_dt_B = mean_dt_for(labels == "B")
+
+            PopSize = len(population)
+
+            #mean_dt = doubling_time(expressions).mean()
 
             records.append({
-                "Initial_ExpMean": args.EXPR_MEAN,
-                "Initial_ExpSD": args.EXPR_SD,
+                "Initial_ExpMean": args.EXPR_MEAN_A,
+                "Initial_ExpSD": args.EXPR_SD_A,
                 "Fitfun": args.fitness_function,
                 "FIT_var1": args.FIT_var1,
                 "FIT_var2": args.FIT_var2,
                 "Heritability": args.h,
                 "iteration": it,
                 "time": time,
-                "mean_doubling_time": mean_dt,
-                "SD": sd_expr,
-                "Fano": fano_expr,
-                "CV": cv_expr,
+                "mean_A": mean_A,
+                "SD_A": sd_A,
+                "mean_B": mean_B,
+                "SD_B": sd_B,
+                "freq_A": freq_A,
+                "freq_B": freq_B,
+                "PopSize": PopSize,
+                #"mean_doubling_time": mean_dt,
+                "mean_dt_A": mean_dt_A,
+                "mean_dt_B": mean_dt_B,
             })
 
-            # Selection
-            mothers = toolbox.select(population, k=args.pop_size)
+            # -----------------------------
+            # Selection (competition)
+            # -----------------------------
+            mothers = toolbox.select(population, k=2 * args.pop_size)
 
-            # Reproduction with heritability
+            # -----------------------------
+            # Reproduction
+            # -----------------------------
             offspring = []
+
             for mom in mothers:
                 mom_expr = mom[0]
 
-                daughter_expr = (
-                    args.EXPR_MEAN
-                    + np.sqrt(args.h) * (mom_expr - args.EXPR_MEAN) #changed to the defined initial mean, not "mean_expr"
-                    + np.sqrt(1 - args.h) * np.random.normal(0, args.EXPR_SD) #changed to the defined initial noise, not "sd_expr"
-                )
+                # Use population-specific SD
+                if mom.label == "A":
+                    sd = args.EXPR_SD_A
+                    mean = args.EXPR_MEAN_A
+                else:  # "B"
+                    sd = args.EXPR_SD_B
+                    mean = args.EXPR_MEAN_B
 
-                daughter_expr = np.clip(
-                    daughter_expr, EXPR_MIN, EXPR_MAX
-                )
+                # Each mother produces TWO daughters
+                for _ in range(2):
+                    daughter_expr = (
+                        mean
+                        + np.sqrt(args.h) * (mom_expr - mean)
+                        + np.sqrt(1 - args.h) * np.random.normal(0, sd)
+                    )
+
+                daughter_expr = np.clip(daughter_expr, EXPR_MIN, EXPR_MAX)
 
                 child = creator.Individual([daughter_expr])
+                child.label = mom.label
                 child.fitness.values = toolbox.evaluate(child)
+
                 offspring.append(child)
+
 
             population = offspring
             time += args.dt
 
     # -----------------------------
-    # Save CSV
+    # Save output
     # -----------------------------
     os.makedirs(args.output_dir, exist_ok=True)
-
-    #filename = (
-    #    f"SIM_mean_{args.EXPR_MEAN}_"
-    #    f"sd_{args.EXPR_SD}_"
-    #    f"her_{args.h}_"
-    #    f"{args.fitness_function}.csv"
-    #)
-
     filepath = os.path.join(args.output_dir, args.outfile)
+
     pd.DataFrame.from_records(records).to_csv(filepath, index=False)
 
-    print(f"\nSimulation complete.")
+    print("\nSimulation complete.")
     print(f"Results saved to:\n{filepath}")
 
 

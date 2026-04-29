@@ -20,6 +20,8 @@ ParentDirectory:
 1. NoisePlasticitySummary.R    
 Script to test for noise plasticity across environments and get summary statistics
 
+2. NoiseExpFitnessRelationship.R
+Script to model non-linear expression-fitness relationships and get residual noise
 
 3. PopsimExpFitDeapConstantNoise.py
 Run different simulations using DEAP package 
