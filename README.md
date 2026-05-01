@@ -4,7 +4,7 @@
 
 #### Author : Taslima Haque
 
-#### Last modified: 04/29/2026
+#### Last modified: 05/01/2026
 
 #### Directory structure:
 ```
@@ -27,7 +27,7 @@ Script to model non-linear expression-fitness relationships and get residual noi
 Run different simulations using DEAP package 
 
 4. SimparseFunctions.R
-Script with all the summary function to parse simulations
+Script with all the summary functions to parse simulations
 
 5. SimSummary.R
 Generate and compare simulation summaries 
