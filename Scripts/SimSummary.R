@@ -32,14 +32,39 @@ ggplot()+
         axis.line= element_line(size = 4, color="grey50"), 
         panel.background = element_rect(fill = "transparent"))
 
-###### Figure 5
-HSumFitness_NM<- process_sims("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
-                              Relmean = 1, RelSD = 0.05) %>% 
-  mutate(Function="Gaussian") %>% 
+SumFitness_NM<- process_sims_comp("Data/Simultions/Python/DEAPSimOut/Final/Normal_Comp_twoD_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
+                                  Relmean = 1, RelSD = 0.05) %>%
+  #filter(Heritability==0) %>%
+  mutate(Function="Gaussian")
+
+SumFitness_LN<-process_sims_comp("Data/Simultions/Python/DEAPSimOut/Final/LogNormal_Comp_twoD_G_c90_Fitvar1_0.5_Fitvar2_0.7.csv",
+                                 Relmean = 1, RelSD = 0.05) %>%
+  #filter(Heritability==0) %>% 
+  mutate(Function="Lognormal")
+
+SumFitness_MN<- process_sims_comp("Data/Simultions/Python/DEAPSimOut/Final/MixedNormal_Comp_twoD_G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w_0.6.csv",
+                                  Relmean = 0.5, RelSD = 0.05) %>%
+  #filter(Heritability==0) %>% 
+  mutate(Function="Mixed-Gaussian")
+
+
+SumFitness_MLN<- process_sims_comp("Data/Simultions/Python/DEAPSimOut/Final/MixedLognormal_Comp_twoD_G_c90_Fitvar1_0.5_0.07_Fitvar2_0.25_0.75_w_0.5.csv",
+                                   Relmean = 1.5, RelSD = 0.05) %>%
+  #filter(Heritability==0) %>% 
+  mutate(Function="Mixed-Lognormal")
+
+
+SumFitness <-rbind(SumFitness_NM, SumFitness_LN, 
+                   SumFitness_MN, SumFitness_MLN) %>% 
+  mutate(Function=factor(Function, 
+                         levels=c("Gaussian", "Lognormal", "Mixed-Gaussian", "Mixed-Lognormal"))) %>% 
+  mutate(Mean=100*Mean) %>% 
   mutate(ExNoise = as.numeric(as.character(Noise))) %>% 
   filter(ExNoise <= 1600)
 
-ggplot(HSumFitness_NM, aes(y=Fitness, x=Mean))+
+
+##### Figure 4
+ggplot(SumFitness_NM, aes(y=Fitness, x=Mean))+
   geom_line(aes(y=Fitness, x=Mean, group=Noise, color=Noise),size=1.0,
             show.legend = F)+
   geom_point(aes(y=Fitness, x=Mean, color=Noise), shape=21,size=2,
@@ -70,56 +95,11 @@ ggplot(HSumFitness_NM, aes(y=Fitness, x=Mean))+
         strip.background = element_rect(
           color="transparent", fill="grey90"))
 
-HFitness_NM<-process_sims_nosum("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c112_Fitvar1_1_Fitvar2_0.4.csv") %>% 
-  mutate(Function="Gaussian") %>% 
-  mutate(Noise=as.numeric(as.character(Noise))) %>% 
-  mutate(abs_distance=abs(Initial_ExpMean - 1))
+##### Figure 5
+SumFitness_H0 <-SumFitness %>% 
+  filter(Heritability==0)
 
-t.test( HFitness_NM$Fitness[HFitness_NM$Initial_ExpMean==0 & HFitness_NM$Initial_ExpSD==0.05 & HFitness_NM$Heritability==0.00],
-        HFitness_NM$Fitness[HFitness_NM$Initial_ExpMean==0 & HFitness_NM$Initial_ExpSD==1.4 & HFitness_NM$Heritability==0.00])
-
-t.test( HFitness_NM$Fitness[HFitness_NM$Initial_ExpMean==2 & HFitness_NM$Initial_ExpSD==0.05 & HFitness_NM$Heritability==0.00],
-        HFitness_NM$Fitness[HFitness_NM$Initial_ExpMean==2 & HFitness_NM$Initial_ExpSD==1.4 & HFitness_NM$Heritability==0.00])
-
-t.test( HFitness_NM$Fitness[HFitness_NM$Initial_ExpMean==1 & HFitness_NM$Initial_ExpSD==0.05 & HFitness_NM$Heritability==0.00],
-        HFitness_NM$Fitness[HFitness_NM$Initial_ExpMean==1 & HFitness_NM$Initial_ExpSD==1.4 & HFitness_NM$Heritability==0.00])
-
-
-####### Figure 5
-#Gaussian
-SumFitness_NM<- process_sims("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
-                             Relmean = 1, RelSD = 0.05) %>%
-  filter(Heritability==0) %>%
-  mutate(Function="Gaussian")
-
-#Lognormal
-SumFitness_LN<-process_sims("Data/Simultions/Python/DEAPSimOut/LogNormal_Constant_G_c90_Fitvar1_0.5_Fitvar2_0.7.csv",
-                            Relmean = 1, RelSD = 0.05) %>% 
-  filter(Heritability==0) %>% 
-  mutate(Function="Lognormal")
-
-#Mixed Gaussian
-SumFitness_MN<- process_sims("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w0.6.csv",
-                             Relmean = 0.5, RelSD = 0.05) %>% 
-  filter(Heritability==0) %>% 
-  mutate(Function="Mixed-Gaussian")
-
-#Mixed Lognormal
-SumFitness_MLN<- process_sims("Data/Simultions/Python/DEAPSimOut/LogNormal_Constant_G_c90_Fitvar1_0.5_0.07_Fitvar2_0.25_0.75_w0.5.csv",
-                              Relmean = 1.5, RelSD = 0.05) %>% 
-  filter(Heritability==0) %>% 
-  mutate(Function="Mixed-Lognormal")
-
-
-SumFitness <-rbind(SumFitness_NM, SumFitness_LN, 
-                   SumFitness_MN, SumFitness_MLN) %>% 
-  mutate(Function=factor(Function, 
-                         levels=c("Gaussian", "Lognormal", "Mixed-Gaussian", "Mixed-Lognormal"))) %>% 
-  mutate(Mean=100*Mean) %>% 
-  mutate(ExNoise = as.numeric(as.character(Noise))) %>% 
-  filter(ExNoise <= 1600)
-
-(Fig5_Fit<-ggplot(SumFitness, aes(y=Fitness, x=Mean))+
+(Fig5_Fit<-ggplot(SumFitness_H0, aes(y=Fitness, x=Mean))+
     geom_line(aes(y=Fitness, x=Mean, group=Noise, color=Noise),size=1)+
     geom_point(aes(y=Fitness, x=Mean, color=Noise), shape=21, size=2)+
     geom_linerange(aes(color=Noise,
@@ -147,15 +127,17 @@ SumFitness <-rbind(SumFitness_NM, SumFitness_LN,
 
 #### Expression-fitness function
 x<-seq(0.01,2,0.01)
-#Gaussian
 cN <- 112 / max(dnorm(seq(0.01, 2, by = 0.01), mean = 1, sd = 0.4))
 yN<-191 - cN * dnorm(x, mean = 1, sd = 0.4)
 
-#Lognormal
 cL <- 90 / max(dlnorm(seq(0.01, 2, by = 0.01), mean = 0.5, sd = 0.7))
 yL<-160 - cL * dlnorm(x, mean = 0.5, sd = 0.7)
 
-
+# cMN <- 90 / max(0.85*(dnorm(seq(0.01, 2, by = 0.01), mean = 1, sd = 0.5))+
+#                 0.15*(dnorm(seq(0.01, 2, by = 0.01), mean = 0.1, sd = 0.25)))
+# 
+# yMN<-160 - cMN * (0.85*(dnorm(seq(0.01, 2, by = 0.01), mean = 1, sd = 0.5))+
+#   0.15*(dnorm(seq(0.01, 2, by = 0.01), mean = 0.1, sd = 0.25)))
 #mixed normal
 cMN <- 90 / max(0.6*(dnorm(seq(0.01, 2, by = 0.01), mean = 0.5, sd = 0.25))+
                   0.4*(dnorm(seq(0.01, 2, by = 0.01), mean = 0.005, sd = 0.5)))
@@ -218,6 +200,20 @@ Expression<-as.data.frame(cbind(Expression=rep(x, 4),
   
 )
 
+#(Fig6<-ggdraw()+
+#draw_image("Plots/SimSchematic2.jpg",x=0,  y = 0.65, scale=1.5)
+# draw_plot(Fig6_Fit,x = 0, y = 0.66,width = 1,height = 0.33)+ 
+# draw_plot(Fig6_Func,x = 0, y = 0.33,width = 1,height = 0.33)+
+# draw_label(x=0.05,y=0.975,label = "A)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.29,y=0.975,label = "B)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.54,y=0.975,label = "C)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.78,y=0.975,label = "D)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.05,y=0.48,label = "E)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.29,y=0.48,label = "F)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.54,y=0.48,label = "G)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.78,y=0.48,label = "H)", color = "black", size = 16, fontface = "bold")
+# 
+#)
 
 tiff("Plots/Fig5.tiff",width=12,height =8,units="in",res=300)
 Fig5
@@ -227,33 +223,26 @@ png("Plots/Fig5.png",width=12,height = 8,units="in",res=300)
 Fig5
 dev.off()
 
-######## Supplementary figure 5
-HSumFitness_NM<- process_sims("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
-                              Relmean = 1, RelSD = 0.05) %>% 
+#### Test low/high noise at different expression levels
+#Gaussian
+Fitness_NM<-process_sims_nosum("Data/Simultions/Python/DEAPSimOut/Final/Normal_Comp_twoD_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
+                               Relmean = 1, RelSD = 0.05) %>%
   mutate(Function="Gaussian")
 
-HSumFitness_LN<-process_sims("Data/Simultions/Python/DEAPSimOut/LogNormal_Constant_G_c90_Fitvar1_0.5_Fitvar2_0.7.csv",
-                             Relmean = 1, RelSD = 0.05) %>% 
-  mutate(Function="LogNormal")
+#Close
+t.test(Fitness_NM$Fitness[Fitness_NM$Mean==1 & Fitness_NM$Heritability==1 & Fitness_NM$SD==0.05],
+       Fitness_NM$Fitness[Fitness_NM$Mean==1 & Fitness_NM$Heritability==1 & Fitness_NM$SD==0.8])
 
-HSumFitness_MN<- process_sims("Data/Simultions/Python/DEAPSimOut/Normal_Constant_G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w0.6.csv",
-                              Relmean = 0.5, RelSD = 0.05) %>% 
+#far
+t.test(Fitness_NM$Fitness[Fitness_NM$Mean==0 & Fitness_NM$Heritability==1 & Fitness_NM$SD==0.05],
+       Fitness_NM$Fitness[Fitness_NM$Mean==0 & Fitness_NM$Heritability==1 & Fitness_NM$SD==0.8])
+
+#Mixed-Normal
+Fitness_MN<-process_sims_nosum("Data/Simultions/Python/DEAPSimOut/Final/MixedNormal_Comp_twoD_G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w_0.6.csv",
+                               Relmean = 1, RelSD = 0.05) %>%
   mutate(Function="Mixed-Gaussian")
 
-HSumFitness_MLN<- process_sims("Data/Simultions/Python/DEAPSimOut/LogNormal_Constant_G_c90_Fitvar1_0.5_0.07_Fitvar2_0.25_0.75_w0.5.csv",
-                               Relmean = 1.5, RelSD = 0.05) %>% 
-  mutate(Function="Mixed-LogNormal")
-
-
-HSumFitness <-rbind(HSumFitness_NM, HSumFitness_LN, 
-                    HSumFitness_MN, HSumFitness_MLN) %>% 
-  mutate(Function=factor(Function, 
-                         levels=c("Gaussian", "LogNormal", "Mixed-Gaussian", "Mixed-LogNormal"))) %>% 
-  mutate(Mean=100*Mean) %>% 
-  mutate(ExNoise = as.numeric(as.character(Noise))) %>% 
-  filter(ExNoise <= 1600)
-
-(FigS5<-ggplot(HSumFitness, aes(y=Fitness, x=Mean))+
+(FigS5<-ggplot(SumFitness, aes(y=Fitness, x=Mean))+
     geom_line(aes(y=Fitness, x=Mean, group=Noise, color=Noise),size=1)+
     geom_point(aes(y=Fitness, x=Mean, color=Noise), shape=21, size=1)+
     geom_linerange(aes(color=Noise,
