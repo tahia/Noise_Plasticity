@@ -15,7 +15,7 @@ library(ggh4x)
 setwd("/home/taslima/data/WittkoppLab/Research_Projects/PlasticNoise/")
 
 ################## Joint analysis for expression-noise-fitness begins here #####################3
-# Read expression data
+# Read expression data (Supplementary Table 5)
 EXP<-read.csv("Data/FabienOriginal.csv") %>% 
   as_tibble() %>% 
   mutate(MUTATION=if_else(STRAIN=="Y2671", "URA3DOUBLE", MUTATION)) %>% 
@@ -39,6 +39,7 @@ FITNESS_WTDB<- read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>
   summarise(Fitness=median(w.estimate.2, na.rm = T))
 
 #This is RAW data from Fabien  
+# Supplementary Table 9
 FITNESS<- read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>% 
   mutate(YFP.CONSTRUCT=if_else(STRAIN=="Y2682", "DOUBLE", YFP.CONSTRUCT)) %>% 
   mutate(w.estimate.2= if_else(
@@ -398,18 +399,19 @@ Optimum$MaxExp<-max_exp
     scale_fill_manual(values = c("#C76E00", "#A7DE70"))+
     labs(x="Median Expression relative to WT (%)", y="Relative Fitness")+
     theme_classic()+
-    theme(axis.title = element_text(size = 16,color="black"),
-          #legend.title = element_text(size=14,face="bold"),
-          legend.title = element_blank(),
-          legend.background = element_rect(fill = "transparent"),
-          legend.position=c(0.05, 0.80),
-          axis.text = element_text(size=16,color="black"),
-          legend.text= element_text(size=14),
-          panel.spacing.x =unit(0.15, "lines") , 
-          panel.spacing.y=unit(0.15,"lines"),
-          strip.text = element_text(size=13,face = "bold"),
-          strip.background = element_rect(
-            color="transparent", fill="grey90"))
+    theme( text=element_text(family="Arial"),
+           axis.title = element_text(size = 18,color="black",face="bold"),
+           #legend.title = element_text(size=14,face="bold"),
+           legend.title = element_blank(),
+           legend.background = element_rect(fill = "transparent"),
+           legend.position=c(0.048, 0.80),
+           axis.text = element_text(size=16,color="black"),
+           legend.text= element_text(size=16,face="bold"),
+           panel.spacing.x =unit(0.15, "lines") , 
+           panel.spacing.y=unit(0.15,"lines"),
+           strip.text = element_text(size=13,face = "bold"),
+           strip.background = element_rect(
+             color="transparent", fill="grey90"))
 )
 
 #Figure 3
@@ -546,13 +548,13 @@ dev.off()
     scale_fill_manual(values = c("#C76E00", "#A7DE70"))+
     labs(x="Median Expression relative to WT (%)", y="Relative Fitness")+
     theme_classic()+
-    theme(axis.title = element_text(size = 16,color="black"),
+    theme(axis.title = element_text(size = 16,color="black",face="bold"),
           #legend.title = element_text(size=14,face="bold"),
           legend.title = element_blank(),
           legend.background = element_rect(fill = "transparent"),
-          legend.position=c(0.05, 0.8),
+          legend.position=c(0.048, 0.8),
           axis.text = element_text(size=16,color="black"),
-          legend.text= element_text(size=14),
+          legend.text= element_text(size=16),
           panel.spacing.x =unit(0.15, "lines") , 
           panel.spacing.y=unit(0.15,"lines"),
           strip.text = element_text(size=13,face = "bold"),
@@ -572,7 +574,7 @@ dev.off()
     geom_point(aes(x=DeltaFANO,y=DeltaFitness,fill=YFP.MEDIAN.RELATIVE.MEAN),
                shape=21 ,size=2.5,color="black", show.legend = T)+
     stat_cor(aes(x=DeltaFANO,y=DeltaFitness),label.y = 0.02, 
-             cor.coef.name = c("r"),size=5)+ 
+             cor.coef.name = c("r"),size=7)+ 
     geom_smooth(aes(x=DeltaFANO,y=DeltaFitness),method='lm')+
     geom_hline(yintercept = 0,linetype=2, color="grey50")+
     geom_vline(xintercept = 0,linetype=2, color="grey50")+
@@ -590,7 +592,7 @@ dev.off()
     #            nrow = 2,scales = "free_x")+
     labs(x="Delta Noise (Fano Factor)", y="Delta Fitness", fill="Median Expression")+
     theme_classic()+
-    theme(axis.title = element_text(size = 16, color="black"),
+    theme(axis.title = element_text(size = 16, color="black",face="bold"),
           legend.title = element_text(size=12,face="bold"),
           legend.background = element_rect(fill = "transparent"),
           legend.position=c(0.05, 0.1),
@@ -668,13 +670,13 @@ dev.off()
     scale_fill_manual(values = c("#C76E00", "#A7DE70"))+
     labs(x="Median Expression relative to WT (%)", y="Relative Fitness")+
     theme_classic()+
-    theme(axis.title = element_text(size = 16,color="black"),
+    theme(axis.title = element_text(size = 16,color="black",face="bold"),
           #legend.title = element_text(size=14,face="bold"),
           legend.title = element_blank(),
           legend.background = element_rect(fill = "transparent"),
-          legend.position=c(0.05, 0.8),
+          legend.position=c(0.048, 0.8),
           axis.text = element_text(size=16,color="black"),
-          legend.text= element_text(size=14),
+          legend.text= element_text(size=16),
           panel.spacing.x =unit(0.15, "lines") , 
           panel.spacing.y=unit(0.15,"lines"),
           strip.text = element_text(size=13,face = "bold"),
@@ -694,7 +696,7 @@ dev.off()
     geom_point(aes(x=DeltaCV,y=DeltaFitness,fill=YFP.MEDIAN.RELATIVE.MEAN),
                shape=21 ,size=2.5,color="black", show.legend = T)+
     stat_cor(aes(x=DeltaCV,y=DeltaFitness),label.y = 0.02, 
-             cor.coef.name = c("r"),size=5)+ 
+             cor.coef.name = c("r"),size=7)+ 
     geom_smooth(aes(x=DeltaCV,y=DeltaFitness),method='lm')+
     geom_hline(yintercept = 0,linetype=2, color="grey50")+
     geom_vline(xintercept = 0,linetype=2, color="grey50")+
@@ -712,7 +714,7 @@ dev.off()
     #            nrow = 2,scales = "free_x")+
     labs(x="Delta Noise (Coefficient of Variation)", y="Delta Fitness", fill="Median Expression")+
     theme_classic()+
-    theme(axis.title = element_text(size = 16, color="black"),
+    theme(axis.title = element_text(size = 16, color="black",face="bold"),
           legend.title = element_text(size=12,face="bold"),
           legend.background = element_rect(fill = "transparent"),
           legend.position=c(0.05, 0.1),

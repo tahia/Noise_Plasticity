@@ -165,7 +165,7 @@ mod6<-lm(datExpGly$YFP.SD.FINAL ~ datExpEth$YFP.SD.FINAL)
 mod.emt6 <- emtrends(mod6, ~1, var="datExpEth$YFP.SD.FINAL")
 test(mod.emt6, null=1)
 
-#### Supplementary Figure 1: plot pairwise correlation of noise 
+#### Figure 1: plot pairwise correlation of noise 
 defaultmar<-c(5.1, 4.1 ,4.1, 2.1)
 newmar<-c(5.1, 5.1 ,3.1, 2.1)
 
@@ -173,7 +173,7 @@ newmar<-c(5.1, 5.1 ,3.1, 2.1)
 tiff("Plots/Fig1_part2.tiff",width=10,height=6,units="in",res=300)
 par(mfrow=c(2,3), mar=newmar)
 plot(datExpGlu$YFP.SD.FINAL, datExpGal$YFP.SD.FINAL,col="firebrick",
-     xlab="Glucose",ylab="Galactose",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="SD in Glucose",ylab="SD in Galactose",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpGal$YFP.SD.FINAL ~ datExpGlu$YFP.SD.FINAL), col = "black", lty = 2)+
   text(paste("r=", round(cor(datExpGlu$YFP.SD.FINAL, datExpGal$YFP.SD.FINAL), 2)), 
@@ -181,7 +181,7 @@ plot(datExpGlu$YFP.SD.FINAL, datExpGal$YFP.SD.FINAL,col="firebrick",
   text(paste("slope=", round(as.numeric(lm(datExpGal$YFP.SD.FINAL ~datExpGlu$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGlu$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL,col="firebrick",
-     xlab="Glucose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="SD in Glucose",ylab="SD in Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpGly$YFP.SD.FINAL ~ datExpGlu$YFP.SD.FINAL), col = "black", lty = 2)+
   text(paste("r=", round(cor(datExpGlu$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL), 2)), 
@@ -189,7 +189,7 @@ plot(datExpGlu$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL,col="firebrick",
   text(paste("slope=", round(as.numeric(lm(datExpGly$YFP.SD.FINAL~ datExpGlu$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGlu$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL,col="firebrick",
-     xlab="Glucose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="SD in Glucose",ylab="SD in Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpEth$YFP.SD.FINAL ~ datExpGlu$YFP.SD.FINAL), col = "black", lty = 2)+
   text(paste("r=", round(cor(datExpGlu$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL), 2)), 
@@ -197,7 +197,7 @@ plot(datExpGlu$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL,col="firebrick",
   text(paste("slope=", round(as.numeric(lm(datExpEth$YFP.SD.FINAL ~ datExpGlu$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGal$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL,col="firebrick",
-     xlab="Galactose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="SD in Galactose",ylab="SD in Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpGly$YFP.SD.FINAL ~ datExpGal$YFP.SD.FINAL), col = "black", lty = 2)+
   text(paste("r=", round(cor(datExpGal$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL), 2)), 
@@ -205,7 +205,7 @@ plot(datExpGal$YFP.SD.FINAL, datExpGly$YFP.SD.FINAL,col="firebrick",
   text(paste("slope=", round(as.numeric(lm(datExpGly$YFP.SD.FINAL ~ datExpGal$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGal$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL,col="firebrick",
-     xlab="Galactose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="SD in Galactose",ylab="SD in Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpEth$YFP.SD.FINAL ~ datExpGal$YFP.SD.FINAL), col = "black", lty = 2)+
   text(paste("r=", round(cor(datExpGal$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL), 2)), 
@@ -213,7 +213,7 @@ plot(datExpGal$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL,col="firebrick",
   text(paste("slope=", round(as.numeric(lm(datExpEth$YFP.SD.FINAL ~ datExpGal$YFP.SD.FINAL)$coefficients[2]), 2)), 
        x = 0.35, y = 0.15, col = "navy", cex=1.5)
 plot(datExpGly$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL,col="firebrick",
-     xlab="Glycerol",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="SD in Glycerol",ylab="SD in Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.6), ylim = c(0,0.6))+
   abline(lm(datExpEth$YFP.SD.FINAL ~ datExpGly$YFP.SD.FINAL), col = "black", lty = 2)+
   text(paste("r=", round(cor(datExpGly$YFP.SD.FINAL, datExpEth$YFP.SD.FINAL), 2)), 
@@ -240,15 +240,15 @@ datExpEth$NoiseCV<-datExpEth$YFP.SD.FINAL/datExpEth$YFP.MEDIAN.FINAL
 png("Plots/SupFig_S1.png",width=10,height=6,units="in",res=300)
 par(mfrow=c(2,3), mar=newmar, oma=c(0,0,2,0))
 plot(datExpGlu$NoiseF, datExpGal$NoiseF,col="firebrick",
-     xlab="Glucose",ylab="Galactose",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="Fano Factor in Glucose",ylab="Fano Factor in Galactose",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpGal$NoiseF ~ datExpGlu$NoiseF), col = "black", lty = 2)+
-  text(paste0("r=", round(cor(datExpGlu$NoiseF, datExpGal$NoiseF), 2)),
+  text(paste0("r=", round(cor(datExpGal$NoiseF, datExpGlu$NoiseF), 2)),
        x = 0.15, y = 0.1, col = "navy", cex=1.5)+
-  text(paste0("slope=", round(as.numeric(lm(datExpGal$NoiseF ~datExpGly$NoiseF)$coefficients[2]), 2)), 
+  text(paste0("slope=", round(as.numeric(lm(datExpGal$NoiseF ~datExpGlu$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGlu$NoiseF, datExpGly$NoiseF,col="firebrick",
-     xlab="Glucose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="Fano Factor in Glucose",ylab="Fano Factor in Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpGly$NoiseF ~ datExpGlu$NoiseF), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGlu$NoiseF, datExpGly$NoiseF), 2)),
@@ -256,7 +256,7 @@ plot(datExpGlu$NoiseF, datExpGly$NoiseF,col="firebrick",
   text(paste0("slope=", round(as.numeric(lm(datExpGly$NoiseF~ datExpGlu$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGlu$NoiseF, datExpEth$NoiseF,col="firebrick",
-     xlab="Glucose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="Fano Factor in Glucose",ylab="Fano Factor in Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpEth$NoiseF ~ datExpGlu$NoiseF), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGlu$NoiseF, datExpEth$NoiseF), 2)),
@@ -264,7 +264,7 @@ plot(datExpGlu$NoiseF, datExpEth$NoiseF,col="firebrick",
   text(paste0("slope=", round(as.numeric(lm(datExpEth$NoiseF ~ datExpGlu$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGal$NoiseF, datExpGly$NoiseF,col="firebrick",
-     xlab="Galactose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="Fano Factor in Galactose",ylab="Fano Factor in Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpGly$NoiseF ~ datExpGal$NoiseF), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGal$NoiseF, datExpGly$NoiseF), 2)),
@@ -272,7 +272,7 @@ plot(datExpGal$NoiseF, datExpGly$NoiseF,col="firebrick",
   text(paste0("slope=", round(as.numeric(lm(datExpGly$NoiseF ~ datExpGal$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGal$NoiseF, datExpEth$NoiseF,col="firebrick",
-     xlab="Galactose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="Fano Factor in Galactose",ylab="Fano Factor in Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpEth$NoiseF ~ datExpGal$NoiseF), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGal$NoiseF, datExpEth$NoiseF), 2)),
@@ -280,7 +280,7 @@ plot(datExpGal$NoiseF, datExpEth$NoiseF,col="firebrick",
   text(paste("slope=", round(as.numeric(lm(datExpEth$NoiseF ~ datExpGal$NoiseF)$coefficients[2]), 2)), 
        x = 0.15, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGly$NoiseF, datExpEth$NoiseF,col="firebrick",
-     xlab="Glycerol",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="Fano Factor in Glycerol",ylab="Fano Factor in Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.2), ylim = c(0,0.2))+
   abline(lm(datExpEth$NoiseF ~ datExpGly$NoiseF), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGly$NoiseF, datExpEth$NoiseF), 2)),
@@ -292,12 +292,13 @@ mtext("Pairwise expression noise (Fano Factor) among different environments", si
 dev.off()
 
 
+
 ### CV
 #tiff("Plots/SupFig_S2.tiff",width=10,height=6,units="in",res=300)
 png("Plots/SupFig_S2.png",width=10,height=6,units="in",res=300)
 par(mfrow=c(2,3), mar=newmar,oma=c(0,0,2,0))
 plot(datExpGlu$NoiseCV, datExpGal$NoiseCV,col="firebrick",
-     xlab="Glucose",ylab="Galactose",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="CV in Glucose",ylab="CV in Galactose",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpGal$NoiseCV ~ datExpGlu$NoiseCV), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGlu$NoiseCV, datExpGal$NoiseCV), 2)),
@@ -305,7 +306,7 @@ plot(datExpGlu$NoiseCV, datExpGal$NoiseCV,col="firebrick",
   text(paste0("slope=", round(as.numeric(lm(datExpGal$NoiseCV ~datExpGlu$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGlu$NoiseCV, datExpGly$NoiseCV,col="firebrick",
-     xlab="Glucose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="CV in Glucose",ylab="CV in Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpGly$NoiseCV ~ datExpGlu$NoiseCV), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGlu$NoiseCV, datExpGly$NoiseCV), 2)),
@@ -313,7 +314,7 @@ plot(datExpGlu$NoiseCV, datExpGly$NoiseCV,col="firebrick",
   text(paste0("slope=", round(as.numeric(lm(datExpGly$NoiseCV~ datExpGlu$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGlu$NoiseCV, datExpEth$NoiseCV,col="firebrick",
-     xlab="Glucose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="CV in Glucose",ylab="CV in Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpEth$NoiseCV ~ datExpGlu$NoiseCV), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGlu$NoiseCV, datExpEth$NoiseCV), 2)),
@@ -321,7 +322,7 @@ plot(datExpGlu$NoiseCV, datExpEth$NoiseCV,col="firebrick",
   text(paste0("slope=", round(as.numeric(lm(datExpEth$NoiseCV ~ datExpGlu$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGal$NoiseCV, datExpGly$NoiseCV,col="firebrick",
-     xlab="Galactose",ylab="Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="CV in Galactose",ylab="CV in Glycerol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpGly$NoiseCV ~ datExpGal$NoiseCV), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGal$NoiseCV, datExpGly$NoiseCV), 2)),
@@ -329,7 +330,7 @@ plot(datExpGal$NoiseCV, datExpGly$NoiseCV,col="firebrick",
   text(paste0("slope=", round(as.numeric(lm(datExpGly$NoiseCV ~ datExpGal$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGal$NoiseCV, datExpEth$NoiseCV,col="firebrick",
-     xlab="Galactose",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="CV in Galactose",ylab="CV in Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpEth$NoiseCV ~ datExpGal$NoiseCV), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGal$NoiseCV, datExpEth$NoiseCV), 2)),
@@ -337,7 +338,7 @@ plot(datExpGal$NoiseCV, datExpEth$NoiseCV,col="firebrick",
   text(paste0("slope=", round(as.numeric(lm(datExpEth$NoiseCV ~ datExpGal$NoiseCV)$coefficients[2]), 2)), 
        x = 0.18, y = 0.05, col = "navy", cex=1.5)
 plot(datExpGly$NoiseCV, datExpEth$NoiseCV,col="firebrick",
-     xlab="Glycerol",ylab="Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
+     xlab="CV in Glycerol",ylab="CV in Ethanol",lty=1,lwd=0.75, cex.axis=2,cex.lab=2,
      xlim = c(0,0.3), ylim = c(0,0.3))+
   abline(lm(datExpEth$NoiseCV ~ datExpGly$NoiseCV), col = "black", lty = 2)+
   text(paste0("r=", round(cor(datExpGly$NoiseCV, datExpEth$NoiseCV), 2)),
@@ -413,7 +414,7 @@ cbPalette <- c( "#E69F00", "#56B4E9", "#009E73",
                 "#999999", "#F0E442")
 
 ##### Supplementary Figure S1
-(Fig1_3<-ggplot(pairwise_df)+
+(FigS2<-ggplot(pairwise_df)+
     geom_histogram(aes(x=estimate, color=contrast, fill=contrast), 
                    binwidth = 0.01, alpha=0.7,
                    show.legend = F)+
@@ -422,18 +423,18 @@ cbPalette <- c( "#E69F00", "#56B4E9", "#009E73",
     scale_x_continuous(limits = c(-0.35,0.35))+
     scale_color_manual(values = cbPalette)+
     scale_fill_manual(values = cbPalette)+
-    labs(x="Noise plasticity", y="Frequency")+
+    labs(x="Noise plasticity (Difference in SD of expression)", y="Frequency")+
     theme_classic(base_size = 16)+
     theme(text = element_text(family = "sans",size=18),
           strip.background = element_rect(colour = NA,
                                           fill = "white", size = 1)))
 
-tiff("Plots/Fig1_3.tiff",width=9,height=6,units="in",res=300)
-Fig1_3
+tiff("Plots/Fig1_part3.tiff",width=9,height=6,units="in",res=300)
+FigS2
 dev.off()
 
-png("Plots/Fig1_3.png",width=8,height=6,units="in",res=300)
-Fig1_3
+png("Plots/Fig1_part3.png",width=8,height=6,units="in",res=300)
+FigS2
 dev.off()
 
 # Test for significance of higher noise plasticity between envs with higher growth rate difference
