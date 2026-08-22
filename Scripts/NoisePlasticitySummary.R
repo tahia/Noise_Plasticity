@@ -25,13 +25,17 @@ setwd("/home/taslima/data/WittkoppLab/Research_Projects/PlasticNoise/")
 ## Supplementary table 2-5 have raw data of expression in
 # Glucose, galactose, glycerol, and ethanol respectively
 #### Reference values
-datExpGluRef<-read.delim("Data/GLUCOSE.WHEEL.DATA.txt") %>% 
+datExpGluRef<-read_xlsx("Data/Supplementary_Tables_revised.xlsx", 
+                        sheet = "ST2_Glucose_Exp",skip = 1) %>% 
   dplyr::filter(STRAIN %in% c("Y1617", "Y978"))  
-datExpGalRef<-read.delim("Data/GALACTOSE.ROTOR.DATA.txt") %>% 
+datExpGalRef<-read_xlsx("Data/Supplementary_Tables_revised.xlsx", 
+                        sheet = "ST3_Galactose_Exp",skip = 1) %>% 
   dplyr::filter(STRAIN %in% c("Y1617", "Y978"))  
-datExpGlyRef<-read.delim("Data/GLYCEROL.WHEEL.DATA.txt") %>% 
+datExpGlyRef<-read_xlsx("Data/Supplementary_Tables_revised.xlsx", 
+                        sheet = "ST4_Glycerol_Exp",skip = 1) %>% 
   dplyr::filter(STRAIN %in% c("Y1617", "Y978"))  
-datExpEthRef<-read.delim("Data/ETHANOL.WHEEL.DATA.txt") %>% 
+datExpEthRef<-read_xlsx("Data/Supplementary_Tables_revised.xlsx", 
+                        sheet = "ST5_Ethanol_Exp",skip = 1) %>% 
   dplyr::filter(STRAIN %in% c("Y1617", "Y978"))  
 
 datREF<-rbind(datExpGluRef, datExpGalRef, 
@@ -52,7 +56,8 @@ datREF<-rbind(datExpGluRef, datExpGalRef,
 # and scaled to noise of WT
 
 #Glucose
-datExpGlu<-read.delim("Data/GLUCOSE.WHEEL.DATA.txt") %>% 
+datExpGlu<-read_xlsx("Data/Supplementary_Tables_revised.xlsx", 
+                     sheet = "ST2_Glucose_Exp",skip = 1) %>% 
   dplyr::filter(!STRAIN %in% c("Y1002", "Y2675", "Y2676", "Y978"))  
 
 
@@ -66,7 +71,8 @@ mod<-anova( lm(YFP.SD.FINAL/YFP.MEDIAN.FINAL ~ STRAIN, data = datExpGlu))
 mod<-anova( lm(YFP.SD.FINAL^2/YFP.MEDIAN.FINAL ~ STRAIN, data = datExpGlu))
 
 #Galactose
-datExpGal<-read.delim("Data/GALACTOSE.ROTOR.DATA.txt") %>% 
+datExpGal<-read_xlsx("Data/Supplementary_Tables_revised.xlsx", 
+                     sheet = "ST3_Galactose_Exp",skip = 1) %>% 
   dplyr::filter(!STRAIN %in% c("Y1002", "Y2675", "Y2676", "Y978"))
 
 mod<-anova( lm(YFP.SD.FINAL ~ STRAIN, data = datExpGal))
@@ -79,7 +85,8 @@ mod<-anova( lm(YFP.SD.FINAL/YFP.MEDIAN.FINAL ~ STRAIN, data = datExpGal))
 mod<-anova( lm(YFP.SD.FINAL^2/YFP.MEDIAN.FINAL ~ STRAIN, data = datExpGal))
 
 #Glycerol
-datExpGly<-read.delim("Data/GLYCEROL.WHEEL.DATA.txt") %>% 
+datExpGly<-read_xlsx("Data/Supplementary_Tables_revised.xlsx", 
+                     sheet = "ST4_Glycerol_Exp",skip = 1) %>% 
   dplyr::filter(!STRAIN %in% c("Y1002", "Y2675", "Y2676", "Y978"))
 
 mod<-anova( lm(YFP.SD.FINAL ~ STRAIN, data = datExpGly))
@@ -92,7 +99,8 @@ mod<-anova( lm(YFP.SD.FINAL/YFP.MEDIAN.FINAL ~ STRAIN, data = datExpGly))
 mod<-anova( lm(YFP.SD.FINAL^2/YFP.MEDIAN.FINAL ~ STRAIN, data = datExpGly))
 
 #Ethanol
-datExpEth<-read.delim("Data/ETHANOL.WHEEL.DATA.txt") %>% 
+datExpEth<-read_xlsx("Data/Supplementary_Tables_revised.xlsx", 
+                     sheet = "ST5_Ethanol_Exp",skip = 1) %>% 
   dplyr::filter(!STRAIN %in% c("Y1002", "Y2675", "Y2676", "Y978"))
 
 mod<-anova( lm(YFP.SD.FINAL ~ STRAIN, data = datExpEth))
