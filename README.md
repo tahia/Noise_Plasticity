@@ -32,6 +32,9 @@ Script with all the summary functions to parse simulations
 5. SimSummary.R
 Generate and compare simulation summaries 
 
+6. MakeSimJobs.R
+Generate a list of jobs for a given combination of expression, noise level, and fitness function 
+
 ```
 
 #### Detailed description of running simulations with PopsimExpFitDeapConstantNoise.py
@@ -46,6 +49,8 @@ A fitness determined by the reciprocal of its expression-dependent doubling time
 
 At each simulation step, individuals are selected using fitness-proportionate roulette selection. Offspring expression is determined by the parent’s expression, population-specific baseline parameters, heritability, and a constant environmental-noise component.
 The script supports Gaussian, log-normal, and two-component mixture fitness functions. Summary statistics are written to a CSV file for each time point and replicate simulation.
+
+To run multiple parameters (expression, noise, and different fitness functions) simultatnously, please use MakeSimJobs.R. 
 
 ##### Requirements
 
@@ -108,5 +113,4 @@ h is the heritability parameter.
 ϵ∼N(0,σ).
 σ is the initial expression SD for the mother’s population.
 
-The environmental-noise SD remains constant throughout the simulation, which is the basis for the ConstantNoise designation in the filename.
-Population labels are inherited directly from the mother.
+The environmental-noise SD remains constant throughout the simulation. Population labels are inherited directly from the mother.
