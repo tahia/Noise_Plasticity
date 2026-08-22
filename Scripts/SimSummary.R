@@ -32,23 +32,23 @@ ggplot()+
         axis.line= element_line(size = 4, color="grey50"), 
         panel.background = element_rect(fill = "transparent"))
 
-SumFitness_NM<- process_sims_comp("Data/Simultions/Python/DEAPSimOut/Final/Normal_Comp_twoD_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
+SumFitness_NM<- process_sims_comp("Data/Normal_Comp_twoD_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
                                   Relmean = 1, RelSD = 0.05) %>%
   #filter(Heritability==0) %>%
   mutate(Function="Gaussian")
 
-SumFitness_LN<-process_sims_comp("Data/Simultions/Python/DEAPSimOut/Final/LogNormal_Comp_twoD_G_c90_Fitvar1_0.5_Fitvar2_0.7.csv",
+SumFitness_LN<-process_sims_comp("Data/LogNormal_Comp_twoD_G_c90_Fitvar1_0.5_Fitvar2_0.7.csv",
                                  Relmean = 1, RelSD = 0.05) %>%
   #filter(Heritability==0) %>% 
   mutate(Function="Lognormal")
 
-SumFitness_MN<- process_sims_comp("Data/Simultions/Python/DEAPSimOut/Final/MixedNormal_Comp_twoD_G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w_0.6.csv",
+SumFitness_MN<- process_sims_comp("Data/MixedNormal_Comp_twoD_G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w_0.6.csv",
                                   Relmean = 0.5, RelSD = 0.05) %>%
   #filter(Heritability==0) %>% 
   mutate(Function="Mixed-Gaussian")
 
 
-SumFitness_MLN<- process_sims_comp("Data/Simultions/Python/DEAPSimOut/Final/MixedLognormal_Comp_twoD_G_c90_Fitvar1_0.5_0.07_Fitvar2_0.25_0.75_w_0.5.csv",
+SumFitness_MLN<- process_sims_comp("Data/MixedLognormal_Comp_twoD_G_c90_Fitvar1_0.5_0.07_Fitvar2_0.25_0.75_w_0.5.csv",
                                    Relmean = 1.5, RelSD = 0.05) %>%
   #filter(Heritability==0) %>% 
   mutate(Function="Mixed-Lognormal")
@@ -240,7 +240,7 @@ dev.off()
 
 #### Test low/high noise at different expression levels
 #Gaussian
-Fitness_NM<-process_sims_nosum("Data/Simultions/Python/DEAPSimOut/Final/Normal_Comp_twoD_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
+Fitness_NM<-process_sims_nosum("Data/Normal_Comp_twoD_G_c112_Fitvar1_1_Fitvar2_0.4.csv",
                                Relmean = 1, RelSD = 0.05) %>%
   mutate(Function="Gaussian")
 
@@ -259,7 +259,7 @@ SumFitness_NM %>%
   summarise(max_val = max(Fitness, na.rm = TRUE),
             exp = Mean[which.max(Fitness)])
 #Lognormal
-Fitness_LN<-process_sims_nosum("Data/Simultions/Python/DEAPSimOut/Final/LogNormal_Comp_twoD_G_c90_Fitvar1_0.5_Fitvar2_0.7.csv",
+Fitness_LN<-process_sims_nosum("Data/LogNormal_Comp_twoD_G_c90_Fitvar1_0.5_Fitvar2_0.7.csv",
                                Relmean = 1, RelSD = 0.05) %>%
   mutate(Function="Gaussian")
 
@@ -281,7 +281,7 @@ SumFitness_LN %>%
             exp = Mean[which.max(Fitness)])
 
 #Mixed-Normal
-Fitness_MN<-process_sims_nosum("Data/Simultions/Python/DEAPSimOut/Final/MixedNormal_Comp_twoD_G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w_0.6.csv",
+Fitness_MN<-process_sims_nosum("Data/MixedNormal_Comp_twoD_G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w_0.6.csv",
                                Relmean = 1, RelSD = 0.05) %>%
   mutate(Function="Mixed-Gaussian")
 
@@ -303,7 +303,7 @@ t.test(Fitness_MN$Fitness[Fitness_MN$Mean==0 & Fitness_MN$Heritability==0 & Fitn
 
 
 #Mixed-lognormal
-Fitness_MLN<-process_sims_nosum("Data/Simultions/Python/DEAPSimOut/Final/MixedLognormal_Comp_twoD_G_c90_Fitvar1_0.5_0.07_Fitvar2_0.25_0.75_w_0.5.csv",
+Fitness_MLN<-process_sims_nosum("Data/MixedLognormal_Comp_twoD_G_c90_Fitvar1_0.5_0.07_Fitvar2_0.25_0.75_w_0.5.csv",
                                 Relmean = 1.5, RelSD = 0.05) %>%
   mutate(Function="Mixed-LogNormal")
 
