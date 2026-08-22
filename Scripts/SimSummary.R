@@ -194,6 +194,7 @@ labeldata<-as.data.frame(cbind(
     geom_vline(data=labeldata, 
                aes(xintercept = Expression), color="grey50",lty=2)+
     #scale_colour_gradient(low = "#4040a1", high = "firebrick")+
+    scale_y_continuous(breaks = c(0.5,0.75,1))+
     scale_color_brewer(palette = "Paired")+
     labs(x="Relative Expression (%)", 
          y="Relative Fitness", color="Relative Noise (%)")+
