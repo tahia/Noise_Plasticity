@@ -8,7 +8,7 @@ for (i in seq(0,2,0.1)) {
          "--EXPR_MEAN_B 0.5 --EXPR_SD_B 0.05 ",
           " --FIT_var1 0.5 --FIT_var1_pair 0.005 --FIT_var2 0.25 --FIT_var2_pair 0.5 --weight 0.6 --h " , k, 
           " --pop_size 10000 --total_time 600 --dt 200 --iterations 5 --fitness_function mixednorm ", 
-          " --output_dir /home/tahaque/Data/WittkoppLab/Research_Projects/PlasticNoise/Data/Simulations/Python/DEAPSimOut/CompD/MixedNormal/G_c90_Fitvar1_0.5_0.005_Fitvar2_0.25_0.5_w_0.6/ ",
+          " --output_dir /home/path_to_output_dir/ ",
           "--outfile ", paste("SIM_CompD_mean_" ,sprintf("%.2f",i),"_sd_", sprintf("%.2f",j),
                                  "_her_",sprintf("%.2f",k),"_mixednorm.csv",sep = ""),
           "\n") 
