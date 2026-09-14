@@ -15,15 +15,18 @@ library(ggh4x)
 setwd("/home/taslima/data/WittkoppLab/Research_Projects/PlasticNoise/")
 
 ################## Joint analysis for expression-noise-fitness begins here #####################3
-# Read expression data (Supplementary Table 5)
-EXP<-read.csv("Data/FabienOriginal.csv") %>% 
+# Read expression data (Supplementary Table 6)
+EXP<-read_xlsx("Data/Supplementary_Tables_revised.xlsx", sheet = "ST6_ExpressionSummary",skip=1) %>% 
+  #read.csv("Data/FabienOriginal.csv") %>% 
   as_tibble() %>% 
   mutate(MUTATION=if_else(STRAIN=="Y2671", "URA3DOUBLE", MUTATION)) %>% 
   dplyr::filter(!STRAIN=="Y2676") %>% #remove one extra URA3 strain
   mutate(ID=paste(MUTATION, ENVIRONMENT,sep = "_"))
 
 # Raw Data from Fabien to get WT fitness
-FITNESS_WT<- read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>% 
+# Read fitness data (Supplementary Table 9)
+FITNESS_WT<- read_xlsx("Data/Supplementary_Tables_revised.xlsx", sheet = "ST9_FitnessRaw", skip = 1) %>% 
+  #read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>% 
   mutate(w.estimate.2=exp(s.estimate)) %>% 
   select(STRAIN,MUTATION, ENVIRONMENT,w.estimate.2) %>% 
   dplyr::filter(STRAIN=="Y1001") %>% 
@@ -31,7 +34,8 @@ FITNESS_WT<- read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>%
   summarise(Fitness=median(w.estimate.2, na.rm = T))
 
 
-FITNESS_WTDB<- read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>% 
+FITNESS_WTDB<- read_xlsx("Data/Supplementary_Tables_revised.xlsx", sheet = "ST9_FitnessRaw", skip = 1) %>% 
+  #read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>% 
   mutate(w.estimate.2=exp(s.estimate)) %>% 
   select(STRAIN,MUTATION, ENVIRONMENT,w.estimate.2) %>% 
   dplyr::filter(STRAIN=="Y2682") %>% 
@@ -40,7 +44,8 @@ FITNESS_WTDB<- read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>
 
 #This is RAW data from Fabien  
 # Supplementary Table 9
-FITNESS<- read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>% 
+FITNESS<- read_xlsx("Data/Supplementary_Tables_revised.xlsx", sheet = "ST9_FitnessRaw", skip = 1) %>% 
+  #read.table("Data/ALL.DATA.FITNESS.txt",header=TRUE,as.is=TRUE) %>% 
   mutate(YFP.CONSTRUCT=if_else(STRAIN=="Y2682", "DOUBLE", YFP.CONSTRUCT)) %>% 
   mutate(w.estimate.2= if_else(
     ENVIRONMENT=="GLUCOSE", exp(s.estimate)/FITNESS_WT$Fitness[FITNESS_WT$ENVIRONMENT=="GLUCOSE"],
