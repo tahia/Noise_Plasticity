@@ -90,7 +90,7 @@ Therefore, the initial combined population size is:
 Initial expression values are independently sampled from normal distributions:
 Population A: Normal(EXPR_MEAN_A, EXPR_SD_A)
 Population B: Normal(EXPR_MEAN_B, EXPR_SD_B)
-Initial expression values are not clipped to the permitted expression range. Offspring expression values are clipped to:
+Offspring expression values are clipped to:
 0.01 ≤ expression ≤ 2.0
 
 Fitness
@@ -102,7 +102,7 @@ tools.selRoulette
 
 Offspring expression
 For a mother with expression xm, offspring expression is calculated as:
-xd=μ+h(xm−μ)+1−hϵ
+xd=μ+ sqrt(h^2)(xm−μ)+ sqrt((1−h^2))ϵ
 
 where:
 
