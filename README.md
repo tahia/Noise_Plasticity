@@ -118,16 +118,16 @@ Selection is performed using DEAP’s roulette-wheel selection:
 tools.selRoulette
 
 Offspring expression
-For a mother with expression xm, offspring expression is calculated as:
+For a mother with expression xm, offspring expression is calculated as:\
 xd=μ+ sqrt(h^2)(xm−μ)+ sqrt((1−h^2))ϵ
 
 where:
 
-xd is the daughter’s expression.
-xm is the mother’s expression.
-μ is the initial expression mean for the mother’s population.
-h is the heritability parameter.
-ϵ∼N(0,σ).
+xd is the daughter’s expression.\
+xm is the mother’s expression.\
+μ is the initial expression mean for the mother’s population.\
+h is the heritability parameter.\
+ϵ∼N(0,σ).\
 σ is the initial expression SD for the mother’s population.
 
 The environmental-noise SD remains constant throughout the simulation. Population labels are inherited directly from the mother.
