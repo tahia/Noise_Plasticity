@@ -23,7 +23,7 @@ ParentDirectory:
 
 Data directory has all the raw and initial files required to reproduce the analysis
 
-```{bash}
+```
 ls Data/*
 
 ```
@@ -66,11 +66,11 @@ To run multiple parameters (expression, noise, and different fitness functions) 
 
 ##### Requirements
 
-Python 3
-NumPy
-pandas
-SciPy
-DEAP
+Python 3\
+NumPy\
+pandas\
+SciPy\
+DEAP\
 
 Install the required packages with:
 pip install numpy pandas scipy deap
