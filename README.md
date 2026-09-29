@@ -123,7 +123,7 @@ tools.selRoulette
 
 Offspring expression
 For a mother with expression xm, offspring expression is calculated as:\
-xd=μ+ sqrt(h^2)(xm−μ)+ sqrt((1−h^2))ϵ
+        xd=μ+ sqrt(h^2)(xm−μ)+ sqrt((1−h^2))ϵ
 
 where:
 
