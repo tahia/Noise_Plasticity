@@ -6,6 +6,12 @@
 
 #### Last modified: 09/29/2026
 
+### Clone the github repository 
+
+```
+$ git clone https://github.com/tahia/Noise_Plasticity.git
+```
+
 #### Directory structure:
 ```
 ParentDirectory:
@@ -15,6 +21,12 @@ ParentDirectory:
            Scripts
 ```
 
+Data directory has all the raw and initial files required to reproduce the analysis
+
+```
+ls Data/*
+
+```
 #### Scipt Descriptions:
 ```
 1. NoisePlasticitySummary.R    

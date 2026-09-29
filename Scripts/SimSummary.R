@@ -1,7 +1,7 @@
 library(ggplot2)
 library(tidyverse)
 
-setwd("/home/taslima/data/WittkoppLab/Research_Projects/PlasticNoise/")
+setwd("current/path")
 source("Scripts/SimparseFunctions.R")
 
 ######## Figure 4
