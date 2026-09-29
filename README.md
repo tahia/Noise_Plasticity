@@ -97,7 +97,7 @@ Simulation model
 Initial populations
 Each replicate begins with two populations:
 
-Population A contains pop_size individuals.
+Population A contains pop_size individuals.\
 Population B contains pop_size individuals.
 
 Therefore, the initial combined population size is:
