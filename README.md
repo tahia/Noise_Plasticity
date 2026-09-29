@@ -70,12 +70,13 @@ Python 3\
 NumPy\
 pandas\
 SciPy\
-DEAP\
+DEAP
 
 Install the required packages with:
 pip install numpy pandas scipy deap
 
 Basic usage:
+
 ```
 python PopsimExpFitDeapConstantNoise.py \
     --EXPR_MEAN_A 0.5 \
