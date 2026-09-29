@@ -70,8 +70,8 @@ ggplot(SumFitness_NM, aes(y=Fitness, x=Mean))+
   geom_point(aes(y=Fitness, x=Mean, color=Noise), shape=21,size=2,
              show.legend = F)+
   geom_linerange(aes(color=Noise,
-                     ymin=Fitness-1.96*Fitness_se, ymax=Fitness+1.96*Fitness_se),
-                 show.legend = F)+
+                     ymin=Fitness-Fitness_sd, ymax=Fitness+Fitness_sd),
+                 linewidth=1.5,show.legend = F)+
   geom_hline(yintercept = c(0.5,0.75), color="grey50",lty=2)+
   #scale_colour_gradient(low = "#4040a1", high = "firebrick")+
   scale_y_continuous(breaks = c(0.5,0.75,1))+
@@ -95,7 +95,6 @@ ggplot(SumFitness_NM, aes(y=Fitness, x=Mean))+
         #strip.text = element_text(size=14,face = "bold"),
         strip.background = element_rect(
           color="transparent", fill="grey90"))
-
 
 ##### Figure 5
 SumFitness_H0 <-SumFitness %>% 
@@ -165,7 +164,7 @@ labeldata<-as.data.frame(cbind(
                          levels=c("Gaussian", "Lognormal", "Mixed-Gaussian", "Mixed-Lognormal")))
 
 
-(Fig5_Func<-ggplot(Expression)+ 
+(Fig5_Func_rev<-ggplot(Expression)+ 
     geom_line(aes(x=Expression*100, y=DT), size=1, color="black")+
     theme_classic()+labs(x="Relative Expression (%)", y="DT")+ 
     scale_x_continuous(limits = c(0,200))+
@@ -186,11 +185,13 @@ labeldata<-as.data.frame(cbind(
   
 )
 
-(Fig5_Fit<-ggplot(SumFitness_H0, aes(y=Fitness, x=Mean))+
+(Fig5_Fit_rev<-ggplot(SumFitness_H0, aes(y=Fitness, x=Mean))+
     geom_line(aes(y=Fitness, x=Mean, group=Noise, color=Noise),size=1)+
     geom_point(aes(y=Fitness, x=Mean, color=Noise), shape=21, size=2)+
     geom_linerange(aes(color=Noise,
-                       ymin=Fitness-1.96*Fitness_se, ymax=Fitness+1.96*Fitness_se),show.legend = T)+
+                       ymin=Fitness-Fitness_sd, ymax=Fitness+Fitness_sd),
+                   linewidth=1.5,
+                   show.legend = T)+
     geom_vline(data=labeldata, 
                aes(xintercept = Expression), color="grey50",lty=2)+
     #scale_colour_gradient(low = "#4040a1", high = "firebrick")+
@@ -214,10 +215,10 @@ labeldata<-as.data.frame(cbind(
             color="transparent", fill="grey90"))
 )
 
-(Fig5<-ggdraw()+
+(Fig5_rev<-ggdraw()+
     #draw_image("Plots/SimSchematic2.jpg",x=0,  y = 0.4, scale = 1)+
-    draw_plot(Fig5_Fit,x = 0, y = 0,width = 1,height = 0.5)+ 
-    draw_plot(Fig5_Func,x = 0, y = 0.5,width = 1,height = 0.5)+
+    draw_plot(Fig5_Fit_rev,x = 0, y = 0,width = 1,height = 0.5)+ 
+    draw_plot(Fig5_Func_rev,x = 0, y = 0.5,width = 1,height = 0.5)+
     draw_label(x=0.05,y=0.975,label = "A)", color = "black", size = 16, fontface = "bold")+
     draw_label(x=0.29,y=0.975,label = "B)", color = "black", size = 16, fontface = "bold")+
     draw_label(x=0.54,y=0.975,label = "C)", color = "black", size = 16, fontface = "bold")+
@@ -229,13 +230,27 @@ labeldata<-as.data.frame(cbind(
   
 )
 
+#(Fig6<-ggdraw()+
+#draw_image("Plots/SimSchematic2.jpg",x=0,  y = 0.65, scale=1.5)
+# draw_plot(Fig6_Fit,x = 0, y = 0.66,width = 1,height = 0.33)+ 
+# draw_plot(Fig6_Func,x = 0, y = 0.33,width = 1,height = 0.33)+
+# draw_label(x=0.05,y=0.975,label = "A)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.29,y=0.975,label = "B)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.54,y=0.975,label = "C)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.78,y=0.975,label = "D)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.05,y=0.48,label = "E)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.29,y=0.48,label = "F)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.54,y=0.48,label = "G)", color = "black", size = 16, fontface = "bold")+
+# draw_label(x=0.78,y=0.48,label = "H)", color = "black", size = 16, fontface = "bold")
+# 
+#)
 
-tiff("Plots/Fig5.tiff",width=12,height =8,units="in",res=300)
-Fig5
+tiff("Plots/Fig5_rev.tiff",width=12,height =8,units="in",res=300)
+Fig5_rev
 dev.off()
 
-png("Plots/Fig5.png",width=12,height = 8,units="in",res=300)
-Fig5
+png("Plots/Fig5_rev.png",width=12,height = 8,units="in",res=300)
+Fig5_rev
 dev.off()
 
 #### Test low/high noise at different expression levels
@@ -324,11 +339,22 @@ t.test(Fitness_MLN$Fitness[Fitness_MLN$Mean==2 & Fitness_MLN$Heritability==0 & F
        Fitness_MLN$Fitness[Fitness_MLN$Mean==2 & Fitness_MLN$Heritability==0 & Fitness_MLN$SD==0.05])
 
 
-(FigS5<-ggplot(SumFitness, aes(y=Fitness, x=Mean))+
+
+tiff("Plots/SupFig_S5.tiff",width=12,height =8,units="in",res=300)
+FigS5
+dev.off()
+
+png("Plots/SupFig_S5.png",width=12,height = 8,units="in",res=300)
+FigS5
+dev.off()
+
+### Figure 7
+(FigS7_rev<-ggplot(SumFitness, aes(y=Fitness, x=Mean))+
     geom_line(aes(y=Fitness, x=Mean, group=Noise, color=Noise),size=1)+
     geom_point(aes(y=Fitness, x=Mean, color=Noise), shape=21, size=1)+
     geom_linerange(aes(color=Noise,
-                       ymin=Fitness-1.96*Fitness_se, ymax=Fitness+1.96*Fitness_se),show.legend = T)+
+                       ymin=Fitness-Fitness_sd, ymax=Fitness+Fitness_sd),
+                   linewidth=1.5,show.legend = T)+
     #geom_hline(yintercept = c(1,0.875,0.855), color="red3",lty=2)+
     #scale_colour_gradient(low = "#4040a1", high = "firebrick")+
     scale_color_brewer(palette = "Paired")+
@@ -350,10 +376,71 @@ t.test(Fitness_MLN$Fitness[Fitness_MLN$Mean==2 & Fitness_MLN$Heritability==0 & F
             color="transparent", fill="grey90"))
 )
 
-tiff("Plots/SupFig_S5.tiff",width=12,height =8,units="in",res=300)
-FigS5
+tiff("Plots/SupFig_S7_rev.tiff",width=12,height =8,units="in",res=300)
+FigS7_rev
 dev.off()
 
-png("Plots/SupFig_S5.png",width=12,height = 8,units="in",res=300)
-FigS5
+png("Plots/SupFig_S7_rev.png",width=12,height = 8,units="in",res=300)
+FigS7_rev
+dev.off()
+
+SumFitness_NM_cat<-as_tibble(SumFitness_NM) %>% 
+  mutate(Heritability=as.character(Heritability)) %>% 
+  mutate(Mean=Mean*100)
+
+custom_labels <- c("100" = "100%", 
+                   "200" = "200%", 
+                   "300" = "300%",
+                   "400" = "400%",
+                   "600" = "600%",
+                   "800" = "800%",
+                   "1000" = "1000%",
+                   "1200" = "1200%",
+                   "1600" = "1600%")
+
+(FigS8_rev<-ggplot(SumFitness_NM_cat, aes(y=Fitness, x=Mean))+
+    geom_line(aes(y=Fitness, x=Mean, group=Heritability, color=Heritability),size=1.0,
+              show.legend = T)+
+    geom_point(aes(y=Fitness, x=Mean, color=Heritability), shape=21,size=2,
+               show.legend = T)+
+    geom_linerange(aes(color=Heritability,
+                       ymin=Fitness-Fitness_sd, ymax=Fitness+Fitness_sd),
+                   linewidth=1,show.legend = F)+
+    geom_hline(yintercept = c(0.5,0.75), color="grey50",lty=2)+
+    #scale_colour_gradient(low = "#4040a1", high = "firebrick")+
+    scale_y_continuous(breaks = c(0.5,0.75,1))+
+    scale_x_continuous(breaks = c(0, 100,200))+
+    scale_color_discrete(palette = "dark2")+
+    # labs(x="Relative Expression (%)", 
+    #      y="Relative Fitness", color="Relative Noise (%)")+
+    labs(x="Relative Expression", 
+         y="Relative Fitness", color="Heritability")+
+    facet_wrap(~Noise,
+               labeller = labeller(Noise = custom_labels),
+               ncol = 9 )+ #scales = "free_y"
+    theme_classic()+
+    theme(axis.title = element_text(size = 17),
+          legend.title = element_text(size=15,face="bold"),
+          legend.text= element_text(size=14),
+          legend.background = element_rect(fill = "transparent"),
+          legend.key.size = unit(0.3,"cm"),
+          legend.position=c(0.9, 0.8),
+          axis.text.x = element_text(size=14,face = "bold",color="black"),
+          axis.text.y = element_text(size=16,face = "bold",color="black"),
+          panel.spacing.x =unit(0.5, "lines") , 
+          panel.spacing.y=unit(0.15,"lines"),
+          strip.text = element_text(size = 16, face = "bold"),
+          #strip.text = element_text(size=14,face = "bold"),
+          strip.background = element_rect(
+            color="transparent", fill="grey90")
+    )
+  
+)
+
+tiff("Plots/SupFig_S8.tiff",width=16,height =4,units="in",res=300)
+FigS8_rev
+dev.off()
+
+png("Plots/SupFig_S8.png",width=16,height =4,units="in",res=300)
+FigS8_rev
 dev.off()

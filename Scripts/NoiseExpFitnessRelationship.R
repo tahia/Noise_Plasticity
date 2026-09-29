@@ -214,9 +214,13 @@ pairwise_results <- pairs(emm, adjust = "bonferroni")
 summary(pairwise_results)
 
 #### Figure 2
-(Fig2_A <-as_tibble(CombDat_NLR) %>% 
+(Fig2_A_rev <-as_tibble(CombDat_NLR) %>% 
     mutate(N=as.numeric(as.character(N))) %>% 
-    mutate(Category=if_else(DeltaSD < 0.01, "Low Noise","High Noise")) %>% 
+    mutate(SD_SE_HIGH= YFP.SD.RELATIVE.MEAN+1.96*YFP.SD.RELATIVE.SD/sqrt(N),
+           SD_SE_LOW= YFP.SD.RELATIVE.MEAN-1.96*YFP.SD.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaSD < 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)), "Low Noise",
+                             if_else((DeltaSD > 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)),
+                                     "High Noise", "UD"))) %>% 
     mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
            YFP.SD.RELATIVE.MEAN=100*YFP.SD.RELATIVE.MEAN,
            YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
@@ -248,18 +252,18 @@ summary(pairwise_results)
                     fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
                 ) 
     )+
-    scale_color_manual(values = c("#C76E00", "#A7DE70"))+ 
-    scale_fill_manual(values = c("#C76E00", "#A7DE70"))+
+    scale_color_manual(values = c("#C76E00", "#A7DE70", "grey50"))+ 
+    scale_fill_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
     #scale_color_manual(values = c("#E6AB02", "#66A61E"))+ 
     #scale_fill_manual(values = c("#E6AB02", "#66A61E"))+
     labs(x="Median Expression relative to WT (%)", y="Expression Noise relative to WT (%)",
          color="", fill="")+
     theme_classic()+
-    theme(axis.title = element_text(size = 14),
+    theme(axis.title = element_text(size = 16),
           legend.title = element_text(size=12,face="bold"),
           legend.background = element_rect(fill = "transparent"),
-          legend.position=c(0.06, 0.8),
-          axis.text = element_text(size=14),
+          legend.position=c(0.07, 0.8),
+          axis.text = element_text(size=16),
           legend.text= element_text(size=12),
           panel.spacing.x =unit(0.15, "lines") , 
           panel.spacing.y=unit(0.15,"lines"),
@@ -268,9 +272,14 @@ summary(pairwise_results)
             color="transparent", fill="grey90"))
 )
 
-(Fig2_B<-as_tibble(CombDat_NLR) %>% 
+(Fig2_B_rev<-as_tibble(CombDat_NLR) %>% 
     mutate(N=as.numeric(as.character(N))) %>% 
-    mutate(Category=if_else(DeltaSD < 0.01, "Low Noise","High Noise")) %>% 
+    mutate(SD_SE_HIGH= YFP.SD.RELATIVE.MEAN+1.96*YFP.SD.RELATIVE.SD/sqrt(N),
+           SD_SE_LOW= YFP.SD.RELATIVE.MEAN-1.96*YFP.SD.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaSD < 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)), "Low Noise",
+                             if_else((DeltaSD > 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    filter(Category!="Undetermined") %>% 
     mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
            YFP.SD.RELATIVE.MEAN=100*YFP.SD.RELATIVE.MEAN,
            YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
@@ -288,7 +297,8 @@ summary(pairwise_results)
     geom_point(aes(x=YFP.MEDIAN.RELATIVE.MEAN,y=Fitness, 
                    fill=Category),shape=21 ,size=2.5,color="black",
                show.legend = F)+
-    geom_smooth(aes(x=YFP.MEDIAN.RELATIVE.MEAN, y=Fitness,color=Category,fill=Category),method = "loess", formula = y ~ x, 
+    geom_smooth(aes(x=YFP.MEDIAN.RELATIVE.MEAN, y=Fitness,color=Category,fill=Category),
+                method = "loess", formula = y ~ x, span = 2/3,
                 se = TRUE, size = 1, alpha = 0.2, show.legend = F)+
     geom_hline(yintercept = 1,linetype=2, color="grey50")+
     geom_vline(xintercept = 100,linetype=2, color="grey50")+
@@ -309,12 +319,12 @@ summary(pairwise_results)
     scale_fill_manual(values = c("#C76E00", "#A7DE70"))+
     labs(x="Median Expression relative to WT (%)", y="Relative Fitness")+
     theme_classic()+
-    theme(axis.title = element_text(size = 14),
+    theme(axis.title = element_text(size = 16),
           legend.title = element_text(size=14,face="bold"),
           legend.background = element_rect(fill = "transparent"),
           legend.position=c(0.1, 0.85),
-          axis.text = element_text(size=14),
-          legend.text= element_text(size=14),
+          axis.text = element_text(size=16),
+          legend.text= element_text(size=16),
           panel.spacing.x =unit(0.15, "lines") , 
           panel.spacing.y=unit(0.15,"lines"),
           strip.text = element_text(size=12,face = "bold"),
@@ -323,17 +333,389 @@ summary(pairwise_results)
   
 )
 
-(Fig2 <-
+(Fig2_rev <-
     ggdraw() +
-    draw_plot(Fig2_B,x = 0, y = 0,width = 1,height = 0.5)+ 
-    draw_plot(Fig2_A,x = 0, y = 0.5,width = 1,height = 0.5)
+    draw_plot(Fig2_B_rev,x = 0, y = 0,width = 1,height = 0.5)+ 
+    draw_plot(Fig2_A_rev,x = 0, y = 0.5,width = 1,height = 0.5)
   #draw_label(x=0.02,y=0.985,label = "A)", color = "black", size = 16, fontface = "bold")+
   #draw_label(x=0.02,y=0.487,label = "B)", color = "black", size = 16, fontface = "bold")
 )
 
-tiff("Plots/Fig2_part2.tiff",width=12,height =8,units="in",res=300)
-Fig2
+tiff("Plots/Fig2_part2_rev.tiff",width=12,height =8,units="in",res=300)
+Fig2_rev
 dev.off()
+
+#####
+### Plot expression-other noise metrics
+## CV
+(Sup_Exp_Noise_CV_rev<-as_tibble(CombDat_NLR) %>%
+   mutate(N=as.numeric(as.character(N))) %>%
+   mutate(CV_SE_HIGH= YFP.CV.RELATIVE.MEAN+1.96*YFP.CV.RELATIVE.SD/sqrt(N),
+          CV_SE_LOW= YFP.CV.RELATIVE.MEAN-1.96*YFP.CV.RELATIVE.SD/sqrt(N)) %>% 
+   mutate(Category=if_else( (DeltaCV < 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)), "Low Noise",
+                            if_else((DeltaCV > 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)),
+                                    "High Noise", "Undetermined"))) %>% 
+   drop_na(Category) %>% 
+   mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
+          YFP.CV.RELATIVE.MEAN=100*YFP.CV.RELATIVE.MEAN,
+          YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
+          YFP.SCV.RELATIVE.SD=100*YFP.CV.RELATIVE.SD
+   ) %>%
+   ggplot()+
+   geom_errorbar(aes(x=YFP.MEDIAN.RELATIVE.MEAN, y=YFP.CV.RELATIVE.MEAN,
+                     xmin= YFP.MEDIAN.RELATIVE.MEAN-1.96*YFP.MEDIAN.RELATIVE.SD/sqrt(N),
+                     xmax= YFP.MEDIAN.RELATIVE.MEAN+1.96*YFP.MEDIAN.RELATIVE.SD/sqrt(N),
+   ),color="gray70") +
+   geom_errorbar(aes(x=YFP.MEDIAN.RELATIVE.MEAN, y=YFP.CV.RELATIVE.MEAN,
+                     ymin= YFP.CV.RELATIVE.MEAN-1.96*YFP.CV.RELATIVE.SD/sqrt(N),
+                     ymax= YFP.CV.RELATIVE.MEAN+1.96*YFP.CV.RELATIVE.SD/sqrt(N),
+   ),color="gray70") +
+   geom_point(aes(x=YFP.MEDIAN.RELATIVE.MEAN,y=YFP.CV.RELATIVE.MEAN,
+                  fill=Category),shape=21 ,size=2.5,color="black", show.legend = F)+
+   geom_hline(yintercept = 100,linetype=2, color="grey50")+
+   geom_vline(xintercept = 100,linetype=2, color="grey50")+
+   geom_line(dat=Concat_Model_SD,aes(x=EXPRESSION*100, y=CV*100))+
+   # geom_text(data=Concat_Regression_SD,aes(x=20, y=200,
+   #                                         label=paste(paste0("r = ",Pearson),
+   #                                                     paste0("P-value = ", Pval),sep="\n" ) )) +
+   # facet_wrap(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+   #                                            "GLYCEROL","ETHANOL")))+
+   facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+                                               "GLYCEROL","ETHANOL")), ncol=4,
+               strip = strip_themed(
+                 background_x = elem_list_rect(
+                   fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
+               )
+   )+
+   #scale_color_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+   scale_fill_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+   #scale_color_manual(values = c("#E6AB02", "#66A61E"))+
+   #scale_fill_manual(values = c("#E6AB02", "#66A61E"))+
+   labs(x="Median Expression relative to WT (%)", y="Expression Noise (CV) relative to WT (%)",
+        color="", fill="")+
+   theme_classic()+
+   theme(axis.title = element_text(size = 12),
+         legend.title = element_text(size=12,face="bold"),
+         legend.background = element_rect(fill = "transparent"),
+         legend.position=c(0.9, 0.8),
+         axis.text = element_text(size=12),
+         legend.text= element_text(size=12),
+         panel.spacing.x =unit(0.15, "lines") ,
+         panel.spacing.y=unit(0.15,"lines"),
+         strip.text = element_text(size=12,face = "bold"),
+         strip.background = element_rect(
+           color="transparent", fill="grey90"))
+ 
+)
+
+(dum<-as_tibble(CombDat_NLR) %>%
+    mutate(N=as.numeric(as.character(N))) %>%
+    mutate(CV_SE_HIGH= YFP.CV.RELATIVE.MEAN+1.96*YFP.CV.RELATIVE.SD/sqrt(N),
+           CV_SE_LOW= YFP.CV.RELATIVE.MEAN-1.96*YFP.CV.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaCV < 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)), "Low Noise",
+                             if_else((DeltaCV > 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    drop_na(Category) %>% 
+    filter(!Category=="Undetermined") %>% 
+    mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
+           YFP.CV.RELATIVE.MEAN=100*YFP.CV.RELATIVE.MEAN,
+           YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
+           YFP.SCV.RELATIVE.SD=100*YFP.CV.RELATIVE.SD
+    ) %>%
+    ggplot()+
+    geom_errorbar(aes(x=YFP.MEDIAN.RELATIVE.MEAN, y=YFP.CV.RELATIVE.MEAN,
+                      xmin= YFP.MEDIAN.RELATIVE.MEAN-1.96*YFP.MEDIAN.RELATIVE.SD/sqrt(N),
+                      xmax= YFP.MEDIAN.RELATIVE.MEAN+1.96*YFP.MEDIAN.RELATIVE.SD/sqrt(N),
+    ),color="gray70") +
+    geom_errorbar(aes(x=YFP.MEDIAN.RELATIVE.MEAN, y=YFP.CV.RELATIVE.MEAN,
+                      ymin= YFP.CV.RELATIVE.MEAN-1.96*YFP.CV.RELATIVE.SD/sqrt(N),
+                      ymax= YFP.CV.RELATIVE.MEAN+1.96*YFP.CV.RELATIVE.SD/sqrt(N),
+    ),color="gray70") +
+    geom_point(aes(x=YFP.MEDIAN.RELATIVE.MEAN,y=YFP.CV.RELATIVE.MEAN,
+                   fill=Category),shape=21 ,size=2.5,color="black", show.legend = T)+
+    geom_hline(yintercept = 100,linetype=2, color="grey50")+
+    geom_vline(xintercept = 100,linetype=2, color="grey50")+
+    geom_line(dat=Concat_Model_SD,aes(x=EXPRESSION*100, y=CV*100))+
+    # geom_text(data=Concat_Regression_SD,aes(x=20, y=200,
+    #                                         label=paste(paste0("r = ",Pearson),
+    #                                                     paste0("P-value = ", Pval),sep="\n" ) )) +
+    # facet_wrap(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+    #                                            "GLYCEROL","ETHANOL")))+
+    facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+                                                "GLYCEROL","ETHANOL")), ncol=4,
+                strip = strip_themed(
+                  background_x = elem_list_rect(
+                    fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
+                )
+    )+
+    #scale_color_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+    scale_fill_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+    #scale_color_manual(values = c("#E6AB02", "#66A61E"))+
+    #scale_fill_manual(values = c("#E6AB02", "#66A61E"))+
+    labs(x="Median Expression relative to WT (%)", y="Expression Noise (CV) relative to WT (%)",
+         color="", fill="")+
+    theme_classic()+
+    theme(axis.title = element_text(size = 12),
+          legend.title = element_text(size=12,face="bold"),
+          legend.background = element_rect(fill = "transparent"),
+          legend.position=c(0.9, 0.8),
+          axis.text = element_text(size=12),
+          legend.text= element_text(size=12),
+          panel.spacing.x =unit(0.15, "lines") ,
+          panel.spacing.y=unit(0.15,"lines"),
+          strip.text = element_text(size=12,face = "bold"),
+          strip.background = element_rect(
+            color="transparent", fill="grey90"))
+)
+
+get_legend<-function(myggplot){
+  tmp <- ggplot_gtable(ggplot_build(myggplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
+}
+
+legend <-get_legend(dum)
+## Fano
+(Sup_Exp_Noise_FANO_rev<-as_tibble(CombDat_NLR) %>%
+    mutate(N=as.numeric(as.character(N))) %>%
+    mutate(FANO_SE_HIGH= YFP.FANO.RELATIVE.MEAN+1.96*YFP.FANO.RELATIVE.SD/sqrt(N),
+           FANO_SE_LOW= YFP.FANO.RELATIVE.MEAN-1.96*YFP.FANO.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaFANO < 0.0 & !between(DeltaFANO_pred, FANO_SE_LOW,FANO_SE_HIGH)), "Low Noise",
+                             if_else((DeltaFANO > 0.0 & !between(DeltaFANO_pred, FANO_SE_LOW,FANO_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    drop_na(Category) %>% 
+    mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
+           YFP.FANO.RELATIVE.MEAN=100*YFP.FANO.RELATIVE.MEAN,
+           YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
+           YFP.FANO.RELATIVE.SD=100*YFP.FANO.RELATIVE.SD
+    ) %>%
+    ggplot()+
+    geom_errorbar(aes(x=YFP.MEDIAN.RELATIVE.MEAN, y=YFP.FANO.RELATIVE.MEAN,
+                      xmin= YFP.MEDIAN.RELATIVE.MEAN-1.96*YFP.MEDIAN.RELATIVE.SD/sqrt(N),
+                      xmax= YFP.MEDIAN.RELATIVE.MEAN+1.96*YFP.MEDIAN.RELATIVE.SD/sqrt(N),
+    ),color="gray70") +
+    geom_errorbar(aes(x=YFP.MEDIAN.RELATIVE.MEAN, y=YFP.FANO.RELATIVE.MEAN,
+                      ymin= YFP.FANO.RELATIVE.MEAN-1.96*YFP.FANO.RELATIVE.SD/sqrt(N),
+                      ymax= YFP.FANO.RELATIVE.MEAN+1.96*YFP.FANO.RELATIVE.SD/sqrt(N),
+    ),color="gray70") +
+    geom_point(aes(x=YFP.MEDIAN.RELATIVE.MEAN,y=YFP.FANO.RELATIVE.MEAN,
+                   fill=Category),shape=21 ,size=2.5,color="black")+
+    geom_hline(yintercept = 100,linetype=2, color="grey50")+
+    geom_vline(xintercept = 100,linetype=2, color="grey50")+
+    geom_line(dat=Concat_Model_SD,aes(x=EXPRESSION*100, y=FANO*100))+
+    # geom_text(data=Concat_Regression_SD,aes(x=20, y=200,
+    #                                         label=paste(paste0("r = ",Pearson),
+    #                                                     paste0("P-value = ", Pval),sep="\n" ) )) +
+    # facet_wrap(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+    #                                            "GLYCEROL","ETHANOL")))+
+    facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+                                                "GLYCEROL","ETHANOL")), ncol=4,
+                strip = strip_themed(
+                  background_x = elem_list_rect(
+                    fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
+                )
+    )+
+    scale_color_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+    scale_fill_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+    #scale_color_manual(values = c("#E6AB02", "#66A61E"))+
+    #scale_fill_manual(values = c("#E6AB02", "#66A61E"))+
+    labs(x="Median Expression relative to WT (%)", y="Expression Noise (FANO) relative to WT (%)",
+         color="", fill="")+
+    theme_classic()+
+    theme(axis.title = element_text(size = 12),
+          legend.title = element_text(size=12,face="bold"),
+          legend.background = element_rect(fill = "transparent"),
+          legend.position=c(-0.2, -0.3),
+          axis.text = element_text(size=12),
+          legend.text= element_text(size=12),
+          panel.spacing.x =unit(0.15, "lines") ,
+          panel.spacing.y=unit(0.15,"lines"),
+          strip.text = element_text(size=12,face = "bold"),
+          strip.background = element_rect(
+            color="transparent", fill="grey90"))
+)
+
+(Fig3_Sup_rev <-
+    ggdraw() +
+    draw_plot(Sup_Exp_Noise_FANO_rev ,x = 0.0, y = 0.5,width = 1,height = 0.5)+ 
+    draw_plot(Sup_Exp_Noise_CV_rev ,x = 0, y = 0.0,width = 1,height = 0.5)+
+    draw_plot(legend ,x = 0.0, y = 0.5,width = 1,height = 0.5)+ 
+    draw_label(x=0.02,y=0.985,label = "A)", color = "black", size = 16, fontface = "bold")+
+    draw_label(x=0.02,y=0.487,label = "B)", color = "black", size = 16, fontface = "bold")
+)
+
+tiff("Plots/Fig3_Sup_rev.tiff",width=8,height =8,units="in",res=300)
+Fig3_Sup_rev
+dev.off()
+
+png("Plots/Fig3_Sup_rev.png",width=8,height =8,units="in",res=300)
+Fig3_Sup_rev
+dev.off()
+
+#####
+#### Plot residuals
+(Fig2_sup_resSD<-as_tibble(CombDat_NLR) %>% 
+   mutate(N=as.numeric(as.character(N))) %>% 
+   mutate(SD_SE_HIGH= YFP.SD.RELATIVE.MEAN+1.96*YFP.SD.RELATIVE.SD/sqrt(N),
+          SD_SE_LOW= YFP.SD.RELATIVE.MEAN-1.96*YFP.SD.RELATIVE.SD/sqrt(N)) %>% 
+   mutate(Category=if_else( (DeltaSD < 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)), "Low Noise",
+                            if_else((DeltaSD > 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)),
+                                    "High Noise", "Undetermined"))) %>% 
+   mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
+          YFP.SD.RELATIVE.MEAN=100*YFP.SD.RELATIVE.MEAN,
+          YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
+          YFP.SD.RELATIVE.SD=100*YFP.SD.RELATIVE.SD
+   ) %>% 
+   ggplot()+
+   geom_point(aes(x=YFP.MEDIAN.RELATIVE.MEAN,y=DeltaSD, 
+                  fill=Category),shape=21 ,size=2.5,color="black", show.legend = F)+
+   geom_hline(yintercept = 0,linetype=2, color="grey50")+
+   # geom_vline(xintercept = 100,linetype=2, color="grey50")+
+   # geom_text(data=Concat_Regression_SD,aes(x=20, y=200,
+   #                                         label=paste(paste0("r = ",Pearson), 
+   #                                                     paste0("P-value = ", Pval),sep="\n" ) )) +
+   # facet_wrap(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+   #                                            "GLYCEROL","ETHANOL")))+
+   facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+                                               "GLYCEROL","ETHANOL")), ncol=4,
+               strip = strip_themed(
+                 background_x = elem_list_rect(
+                   fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
+               ) 
+   )+
+   scale_color_manual(values = c("#C76E00", "#A7DE70", "grey50"))+ 
+   scale_fill_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+   #scale_color_manual(values = c("#E6AB02", "#66A61E"))+ 
+   #scale_fill_manual(values = c("#E6AB02", "#66A61E"))+
+   labs(x="Median Expression relative to WT (%)", 
+        y="Noise (SD) residuals",
+        color="", fill="")+
+   theme_classic()+
+   theme(axis.title = element_text(size = 14),
+         legend.title = element_text(size=12,face="bold"),
+         legend.background = element_rect(fill = "transparent"),
+         legend.position=c(0.1, 0.8),
+         axis.text = element_text(size=14),
+         legend.text= element_text(size=12),
+         panel.spacing.x =unit(0.15, "lines") , 
+         panel.spacing.y=unit(0.15,"lines"),
+         strip.text = element_text(size=12,face = "bold"),
+         strip.background = element_rect(
+           color="transparent", fill="grey90"))
+)
+
+(Fig2_sup_resFANO<-as_tibble(CombDat_NLR) %>%
+    mutate(N=as.numeric(as.character(N))) %>%
+    mutate(FANO_SE_HIGH= YFP.FANO.RELATIVE.MEAN+1.96*YFP.FANO.RELATIVE.SD/sqrt(N),
+           FANO_SE_LOW= YFP.FANO.RELATIVE.MEAN-1.96*YFP.FANO.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaFANO < 0.0 & !between(DeltaFANO_pred, FANO_SE_LOW,FANO_SE_HIGH)), "Low Noise",
+                             if_else((DeltaFANO > 0.0 & !between(DeltaFANO_pred, FANO_SE_LOW,FANO_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    drop_na(Category) %>% 
+    mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
+           YFP.FANO.RELATIVE.MEAN=100*YFP.FANO.RELATIVE.MEAN,
+           YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
+           YFP.FANO.RELATIVE.SD=100*YFP.FANO.RELATIVE.SD
+    ) %>%
+    ggplot()+
+    geom_point(aes(x=YFP.MEDIAN.RELATIVE.MEAN,y=DeltaFANO,
+                   fill=Category),shape=21 ,size=2.5,color="black", show.legend = F)+
+    geom_hline(yintercept = 0,linetype=2, color="grey50")+
+    facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+                                                "GLYCEROL","ETHANOL")), ncol=4,
+                strip = strip_themed(
+                  background_x = elem_list_rect(
+                    fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
+                )
+    )+
+    scale_color_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+    scale_fill_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+    #scale_color_manual(values = c("#E6AB02", "#66A61E"))+
+    #scale_fill_manual(values = c("#E6AB02", "#66A61E"))+
+    labs(x="Median Expression relative to WT (%)", 
+         y="Noise (FANO) residuals",
+         color="", fill="")+
+    theme_classic()+
+    theme(axis.title = element_text(size = 14),
+          legend.title = element_text(size=12,face="bold"),
+          legend.background = element_rect(fill = "transparent"),
+          legend.position=c(0.1, 0.8),
+          axis.text = element_text(size=14),
+          legend.text= element_text(size=12),
+          panel.spacing.x =unit(0.15, "lines") , 
+          panel.spacing.y=unit(0.15,"lines"),
+          strip.text = element_text(size=12,face = "bold"),
+          strip.background = element_rect(
+            color="transparent", fill="grey90"))
+)
+
+
+(Fig2_sup_resCV<-as_tibble(CombDat_NLR) %>%
+    mutate(N=as.numeric(as.character(N))) %>%
+    mutate(CV_SE_HIGH= YFP.CV.RELATIVE.MEAN+1.96*YFP.CV.RELATIVE.SD/sqrt(N),
+           CV_SE_LOW= YFP.CV.RELATIVE.MEAN-1.96*YFP.CV.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaCV < 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)), "Low Noise",
+                             if_else((DeltaCV > 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    drop_na(Category) %>% 
+    mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
+           YFP.CV.RELATIVE.MEAN=100*YFP.CV.RELATIVE.MEAN,
+           YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
+           YFP.SCV.RELATIVE.SD=100*YFP.CV.RELATIVE.SD
+    ) %>%
+    ggplot()+
+    geom_point(aes(x=YFP.MEDIAN.RELATIVE.MEAN,y=DeltaCV,
+                   fill=Category),shape=21 ,size=2.5,color="black",
+               show.legend = F)+
+    geom_hline(yintercept = 0,linetype=2, color="grey50")+
+    facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+                                                "GLYCEROL","ETHANOL")), ncol=4,
+                strip = strip_themed(
+                  background_x = elem_list_rect(
+                    fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
+                )
+    )+
+    scale_color_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+    scale_fill_manual(values = c("#C76E00", "#A7DE70", "grey50"))+
+    #scale_color_manual(values = c("#E6AB02", "#66A61E"))+
+    #scale_fill_manual(values = c("#E6AB02", "#66A61E"))+
+    labs(x="Median Expression relative to WT (%)", 
+         y="Noise (CV) residuals",
+         color="", fill="")+
+    theme_classic()+
+    theme(axis.title = element_text(size = 14),
+          legend.title = element_text(size=12,face="bold"),
+          legend.background = element_rect(fill = "transparent"),
+          legend.position=c(0.1, 0.8),
+          axis.text = element_text(size=14),
+          legend.text= element_text(size=12),
+          panel.spacing.x =unit(0.15, "lines") , 
+          panel.spacing.y=unit(0.15,"lines"),
+          strip.text = element_text(size=12,face = "bold"),
+          strip.background = element_rect(
+            color="transparent", fill="grey90"))
+)
+
+(Fig6_Sup_res <-
+    ggdraw() +
+    draw_plot(Fig2_sup_resSD ,x = 0.0, y = 0.66,width = 1,height = 0.33)+ 
+    draw_plot(Fig2_sup_resFANO ,x = 0.0, y = 0.33,width = 1,height = 0.33)+ 
+    draw_plot(Fig2_sup_resCV ,x = 0.0, y = 0.0,width = 1,height = 0.33)+ 
+    draw_label(x=0.02,y=0.985,label = "A)", color = "black", size = 16, fontface = "bold")+
+    draw_label(x=0.02,y=0.66,label = "B)", color = "black", size = 16, fontface = "bold")+
+    draw_label(x=0.02,y=0.33,label = "C)", color = "black", size = 16, fontface = "bold")
+)
+
+tiff("Plots/Fig6_Sup_residuals.tiff",width=8,height =8,units="in",res=300)
+Fig6_Sup_res
+dev.off()
+
+png("Plots/Fig6_Sup_residuals.png",width=8,height =8,units="in",res=300)
+Fig5_Sup_res
+dev.off()
+
+#####
 
 # Figure 3
 # Define the optimum as reduction of 0.5% fitness relative to WT
@@ -356,16 +738,32 @@ Optimum<-rbind(Concat_Model_Fitness[Concat_Model_Fitness$ENVIRONMENT=="GLUCOSE",
                                                                                             - (max_fitness[4] -max_fitness[4]*0.005)))[c(1:10)],]
 )
 
+Optimum_max<-rbind(Concat_Model_Fitness[Concat_Model_Fitness$ENVIRONMENT=="GLUCOSE",][order(abs(Concat_Model_Fitness$FITNESS[Concat_Model_Fitness$ENVIRONMENT=="GLUCOSE"]
+                                                                                                - (max_fitness[1] -max_fitness[1]*0.005)),decreasing = F)[c(1:10)],],
+                   Concat_Model_Fitness[Concat_Model_Fitness$ENVIRONMENT=="GALACTOSE",][order(abs(Concat_Model_Fitness$FITNESS[Concat_Model_Fitness$ENVIRONMENT=="GALACTOSE"]
+                                                                                                  -(max_fitness[2] -max_fitness[2]*0.005)))[c(1:10)],],
+                   Concat_Model_Fitness[Concat_Model_Fitness$ENVIRONMENT=="GLYCEROL",][order(abs(Concat_Model_Fitness$FITNESS[Concat_Model_Fitness$ENVIRONMENT=="GLYCEROL"]
+                                                                                                 - (max_fitness[3] -max_fitness[3]*0.005)))[c(1:10)],],
+                   Concat_Model_Fitness[Concat_Model_Fitness$ENVIRONMENT=="ETHANOL",][order(abs(Concat_Model_Fitness$FITNESS[Concat_Model_Fitness$ENVIRONMENT=="ETHANOL"]
+                                                                                                - (max_fitness[4] -max_fitness[4]*0.005)))[c(1:10)],]
+)
+
 #This with summarized fitness from Mo
 #Optimum<-Optimum[c(1,14,22,31),]
 Optimum<-Optimum[c(9,18,23,39),] #get the minimum expression
+Optimum_max<-c(1.734223,1.910615,1.952407,2.025618)
 Optimum$Threshold<-(max_fitness- max_fitness*0.005)
 Optimum$MaxFitness<-max_fitness
-Optimum$MaxExp<-max_exp
+Optimum$MaxExp<-Optimum_max
 
-(Fig3A<-as_tibble(CombDat_NLR) %>% 
+(Fig3A_rev<-as_tibble(CombDat_NLR) %>% 
     mutate(N=as.numeric(as.character(N))) %>% 
-    mutate(Category=if_else(DeltaSD < 0.01, "Low Noise","High Noise")) %>% 
+    mutate(SD_SE_HIGH= YFP.SD.RELATIVE.MEAN+1.96*YFP.SD.RELATIVE.SD/sqrt(N),
+           SD_SE_LOW= YFP.SD.RELATIVE.MEAN-1.96*YFP.SD.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaSD < 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)), "Low Noise",
+                             if_else((DeltaSD > 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    filter(Category!="Undetermined") %>% 
     mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
            YFP.SD.RELATIVE.MEAN=100*YFP.SD.RELATIVE.MEAN,
            YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
@@ -390,6 +788,7 @@ Optimum$MaxExp<-max_exp
     geom_vline(data=Optimum, aes(xintercept = MaxExp*100 ),linetype=2, color="grey50")+
     #geom_vline(xintercept = 100,linetype=2, color="grey50")+
     geom_vline(data=Optimum,aes(xintercept = EXPRESSION*100),linetype=1, color="firebrick")+
+    geom_vline(data=Optimum,aes(xintercept = MaxExp*100),linetype=1, color="firebrick")+
     facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
                                                 "GLYCEROL","ETHANOL")), ncol=4,
                 strip = strip_themed(
@@ -421,21 +820,37 @@ Optimum$MaxExp<-max_exp
 
 #Figure 3
 #####3D-E Plot close and far from optimum class 
-CombDat_NLR<-CombDat_NLR %>% 
+CombDat_NLR_short<-CombDat_NLR %>% 
+  mutate(N=as.numeric(as.character(N))) %>% 
+  mutate(SD_SE_HIGH= YFP.SD.RELATIVE.MEAN+1.96*YFP.SD.RELATIVE.SD/sqrt(N),
+         SD_SE_LOW= YFP.SD.RELATIVE.MEAN-1.96*YFP.SD.RELATIVE.SD/sqrt(N)) %>% 
+  mutate(Category=if_else( (DeltaSD < 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)), "Low Noise",
+                           if_else((DeltaSD > 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)),
+                                   "High Noise", "Undetermined"))) %>% 
+  filter(Category!="Undetermined") %>% 
+  filter( ! (ENVIRONMENT=="GLUCOSE" & STRAIN=="Y3034")) %>% 
+  filter( ! (ENVIRONMENT=="GALACTOSE" & STRAIN=="Y3011")) %>% 
+  filter( ! (ENVIRONMENT=="GLYCEROL" & STRAIN=="Y3006")) %>% 
   mutate( OPT_Group = case_when(
     ENVIRONMENT=="GLUCOSE" & 
-      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="GLUCOSE")] ~ "Far from optimum",
+      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="GLUCOSE")] ~ "Far below optimum",
     ENVIRONMENT=="GALACTOSE" & 
-      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="GALACTOSE")] ~ "Far from optimum",
+      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="GALACTOSE")] ~ "Far below optimum",
     ENVIRONMENT=="GLYCEROL" & 
-      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="GLYCEROL")] ~ "Far from optimum",
+      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="GLYCEROL")] ~ "Far below optimum",
     ENVIRONMENT=="ETHANOL" & 
-      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="ETHANOL")] ~ "Far from optimum",
+      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="ETHANOL")] ~ "Far below optimum",
     .default = "Close to optimum")
   )
 
-(Fig3B<-as_tibble(CombDat_NLR) %>% 
+(Fig3B_rev<-as_tibble(CombDat_NLR_short) %>% 
     mutate(N=as.numeric(as.character(N))) %>% 
+    mutate(SD_SE_HIGH= YFP.SD.RELATIVE.MEAN+1.96*YFP.SD.RELATIVE.SD/sqrt(N),
+           SD_SE_LOW= YFP.SD.RELATIVE.MEAN-1.96*YFP.SD.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaSD < 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)), "Low Noise",
+                             if_else((DeltaSD > 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    filter(Category!="Undetermined") %>% 
     mutate(Category=if_else(DeltaSD < 0.01, "Delta-SD<1%","Delta-SD>1%")) %>% 
     mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
            YFP.SD.RELATIVE.MEAN=100*YFP.SD.RELATIVE.MEAN,
@@ -446,7 +861,7 @@ CombDat_NLR<-CombDat_NLR %>%
     geom_point(aes(x=DeltaSD,y=DeltaFitness,fill=YFP.MEDIAN.RELATIVE.MEAN),
                shape=21 ,size=2.5,color="black", show.legend = T)+
     stat_cor(aes(x=DeltaSD,y=DeltaFitness),label.y = 0.02,
-             cor.coef.name = c("r"),size=5)+ 
+             cor.coef.name = c("r"),size=7)+ 
     geom_smooth(aes(x=DeltaSD,y=DeltaFitness),method='lm')+
     geom_hline(yintercept = 0,linetype=2, color="grey50")+
     geom_vline(xintercept = 0,linetype=2, color="grey50")+
@@ -464,7 +879,8 @@ CombDat_NLR<-CombDat_NLR %>%
     #            nrow = 2,scales = "free_x")+
     labs(x="Delta Noise (Standard deviation)", y="Delta Fitness", fill="Median Expression")+
     theme_classic()+
-    theme(axis.title = element_text(size = 16, color="black"),
+    theme(text=element_text(family="Arial"),
+          axis.title = element_text(size = 18, color="black",face="bold"),
           legend.title = element_text(size=12,face="bold"),
           legend.background = element_rect(fill = "transparent"),
           legend.position=c(0.05, 0.1),
@@ -486,10 +902,10 @@ CombDat_NLR<-CombDat_NLR %>%
 #     draw_label(x=0.04,y=0.35,label = "C)", color = "black", size = 16, fontface = "bold")
 # )
 
-(Fig3 <-
+(Fig3_rev <-
     ggdraw() +
-    draw_plot(Fig3B,x = 0, y = 0,width = 1,height = 0.7)+ 
-    draw_plot(Fig3A,x = 0, y = 0.7,width = 1,height = 0.3)+
+    draw_plot(Fig3B_rev,x = 0, y = 0,width = 1,height = 0.7)+ 
+    draw_plot(Fig3A_rev,x = 0, y = 0.7,width = 1,height = 0.3)+
     draw_label(x=0.07,y=0.98,label = "A", color = "black", size = 16, fontface = "bold")+
     draw_label(x=0.31,y=0.98,label = "B", color = "black", size = 16, fontface = "bold")+
     draw_label(x=0.54,y=0.98,label = "C", color = "black", size = 16, fontface = "bold")+
@@ -506,18 +922,48 @@ CombDat_NLR<-CombDat_NLR %>%
   #draw_label(x=0.04,y=0.35,label = "C)", color = "black", size = 16, fontface = "bold")
 )
 
-tiff("Plots/Fig3.tiff",width=16,height =12,units="in",res=300)
-Fig3
+tiff("Plots/Fig3_rev.tiff",width=16,height =12,units="in",res=300)
+Fig3_rev
 dev.off()
 
-png("Plots/Fig3.png",width=16,height =12,units="in",res=300)
-Fig3
+png("Plots/Fig3_rev.png",width=16,height =12,units="in",res=300)
+Fig3_rev
 dev.off()
 
 ###### Supplementary Figure2 noise as FANO to support Figure 3
-(Sup_Fig3A<-as_tibble(CombDat_NLR) %>% 
+
+CombDat_NLR_short<-CombDat_NLR %>% 
+  mutate(N=as.numeric(as.character(N))) %>% 
+  mutate(SD_SE_HIGH= YFP.SD.RELATIVE.MEAN+1.96*YFP.SD.RELATIVE.SD/sqrt(N),
+         SD_SE_LOW= YFP.SD.RELATIVE.MEAN-1.96*YFP.SD.RELATIVE.SD/sqrt(N)) %>% 
+  mutate(Category=if_else( (DeltaSD < 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)), "Low Noise",
+                           if_else((DeltaSD > 0.0 & !between(DeltaSD_pred, SD_SE_LOW,SD_SE_HIGH)),
+                                   "High Noise", "Undetermined"))) %>% 
+  filter(Category!="Undetermined") %>% 
+  filter( ! (ENVIRONMENT=="GLUCOSE" & STRAIN=="Y3034")) %>% 
+  filter( ! (ENVIRONMENT=="GALACTOSE" & STRAIN=="Y3011")) %>% 
+  filter( ! (ENVIRONMENT=="GLYCEROL" & STRAIN=="Y3006")) %>% 
+  filter( ! (ENVIRONMENT=="ETHANOL" & STRAIN=="Y3006")) %>% 
+  mutate( OPT_Group = case_when(
+    ENVIRONMENT=="GLUCOSE" & 
+      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="GLUCOSE")] ~ "Far below optimum",
+    ENVIRONMENT=="GALACTOSE" & 
+      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="GALACTOSE")] ~ "Far below optimum",
+    ENVIRONMENT=="GLYCEROL" & 
+      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="GLYCEROL")] ~ "Far below optimum",
+    ENVIRONMENT=="ETHANOL" & 
+      YFP.MEDIAN.RELATIVE.MEAN < Optimum$EXPRESSION[(Optimum$ENVIRONMENT=="ETHANOL")] ~ "Far below optimum",
+    .default = "Close to optimum")
+  )
+
+(Sup_Fig3A_rev<-as_tibble(CombDat_NLR) %>% 
     mutate(N=as.numeric(as.character(N))) %>% 
-    mutate(Category=if_else(DeltaFANO < 0.01, "Low Noise","High Noise")) %>% 
+    mutate(FANO_SE_HIGH= YFP.FANO.RELATIVE.MEAN+1.96*YFP.FANO.RELATIVE.SD/sqrt(N),
+           FANO_SE_LOW= YFP.FANO.RELATIVE.MEAN-1.96*YFP.FANO.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaFANO < 0.0 & !between(DeltaFANO_pred, FANO_SE_LOW,FANO_SE_HIGH)), "Low Noise",
+                             if_else((DeltaFANO > 0.0 & !between(DeltaFANO_pred, FANO_SE_LOW,FANO_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    filter(Category!="Undetermined") %>% 
     mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
            YFP.FANO.RELATIVE.MEAN=100*YFP.FANO.RELATIVE.MEAN,
            YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
@@ -539,12 +985,14 @@ dev.off()
     geom_hline(data=Optimum, aes(yintercept = MaxFitness ),linetype=2, color="grey10")+
     geom_vline(data=Optimum, aes(xintercept = MaxExp*100 ),linetype=2, color="grey50")+
     #geom_vline(xintercept = 100,linetype=2, color="grey50")+
-    geom_vline(data=Optimum,aes(xintercept = EXPRESSION*100),linetype=1, color="firebrick")+    facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
-                                                                                                                                            "GLYCEROL","ETHANOL")), ncol=4,
-                                                                                                            strip = strip_themed(
-                                                                                                              background_x = elem_list_rect(
-                                                                                                                fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
-                                                                                                            ) 
+    geom_vline(data=Optimum,aes(xintercept = EXPRESSION*100),linetype=1, color="firebrick")+
+    geom_vline(data=Optimum,aes(xintercept = MaxExp*100),linetype=1, color="firebrick")+
+    facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+                                                "GLYCEROL","ETHANOL")), ncol=4,
+                strip = strip_themed(
+                  background_x = elem_list_rect(
+                    fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
+                ) 
     )+
     scale_y_continuous(limits = c(0.94,1.05))+
     # scale_color_manual(values = c("#E6AB02", "#66A61E"))+
@@ -567,8 +1015,14 @@ dev.off()
             color="transparent", fill="grey90"))
 )
 
-(Sup_Fig3B<-as_tibble(CombDat_NLR) %>% 
+(Sup_Fig3B_rev<-as_tibble(CombDat_NLR_short) %>% 
     mutate(N=as.numeric(as.character(N))) %>% 
+    mutate(FANO_SE_HIGH= YFP.FANO.RELATIVE.MEAN+1.96*YFP.FANO.RELATIVE.SD/sqrt(N),
+           FANO_SE_LOW= YFP.FANO.RELATIVE.MEAN-1.96*YFP.FANO.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaFANO < 0.0 & !between(DeltaFANO_pred, FANO_SE_LOW,FANO_SE_HIGH)), "Low Noise",
+                             if_else((DeltaFANO > 0.0 & !between(DeltaFANO_pred, FANO_SE_LOW,FANO_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    filter(Category!="Undetermined") %>% 
     mutate(Category=if_else(DeltaFANO < 0.01, "Delta-SD<1%","Delta-SD>1%")) %>% 
     mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
            YFP.SD.RELATIVE.MEAN=100*YFP.SD.RELATIVE.MEAN,
@@ -610,10 +1064,10 @@ dev.off()
             color="transparent", fill="grey90"))
 )
 
-(SupFig_S3 <-
+(SupFig_S3_rev <-
     ggdraw() +
-    draw_plot(Sup_Fig3B,x = 0, y = 0,width = 1,height = 0.7)+ 
-    draw_plot(Sup_Fig3A,x = 0, y = 0.7,width = 1,height = 0.3)+
+    draw_plot(Sup_Fig3B_rev,x = 0, y = 0,width = 1,height = 0.7)+ 
+    draw_plot(Sup_Fig3A_rev,x = 0, y = 0.7,width = 1,height = 0.3)+
     draw_label(x=0.07,y=0.98,label = "A", color = "black", size = 16, fontface = "bold")+
     draw_label(x=0.31,y=0.98,label = "B", color = "black", size = 16, fontface = "bold")+
     draw_label(x=0.54,y=0.98,label = "C", color = "black", size = 16, fontface = "bold")+
@@ -628,18 +1082,23 @@ dev.off()
     draw_label(x=0.78,y=0.33,label = "L", color = "black", size = 16, fontface = "bold")
 )
 
-tiff("Plots/SupFig_S3.tiff",width=16,height =12,units="in",res=300)
-SupFig_S3
+tiff("Plots/SupFig_S3_rev.tiff",width=16,height =12,units="in",res=300)
+SupFig_S3_rev
 dev.off()
 
-png("Plots/SupFig_S3.png",width=16,height =12,units="in",res=300)
-SupFig_S3
+png("Plots/SupFig_S3_rev.png",width=16,height =12,units="in",res=300)
+SupFig_S3_rev
 dev.off()
 
 ###### Supplementary Figure4 noise as CV to support Figure 3
-(Sup_Fig4A<-as_tibble(CombDat_NLR) %>% 
+(Sup_Fig4A_rev<-as_tibble(CombDat_NLR) %>% 
     mutate(N=as.numeric(as.character(N))) %>% 
-    mutate(Category=if_else(DeltaCV < 0.01, "Low Noise","High Noise")) %>% 
+    mutate(CV_SE_HIGH= YFP.CV.RELATIVE.MEAN+1.96*YFP.CV.RELATIVE.SD/sqrt(N),
+           CV_SE_LOW= YFP.CV.RELATIVE.MEAN-1.96*YFP.CV.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaCV < 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)), "Low Noise",
+                             if_else((DeltaCV > 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    filter(Category!="Undetermined") %>% 
     mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
            YFP.FANO.RELATIVE.MEAN=100*YFP.FANO.RELATIVE.MEAN,
            YFP.MEDIAN.RELATIVE.SD=100*YFP.MEDIAN.RELATIVE.SD,
@@ -659,14 +1118,16 @@ dev.off()
     geom_line(dat=Concat_Model_Fitness,aes(x=EXPRESSION*100, y=FITNESS))+
     geom_hline(data=Optimum, aes(yintercept = Threshold ),linetype=2, color="grey50")+
     geom_hline(data=Optimum, aes(yintercept = MaxFitness ),linetype=2, color="grey10")+
-    geom_vline(data=Optimum, aes(xintercept = MaxExp*100 ),linetype=2, color="grey50")+
+    #geom_vline(data=Optimum, aes(xintercept = MaxExp*100 ),linetype=2, color="grey50")+
     #geom_vline(xintercept = 100,linetype=2, color="grey50")+
-    geom_vline(data=Optimum,aes(xintercept = EXPRESSION*100),linetype=1, color="firebrick")+    facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
-                                                                                                                                            "GLYCEROL","ETHANOL")), ncol=4,
-                                                                                                            strip = strip_themed(
-                                                                                                              background_x = elem_list_rect(
-                                                                                                                fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
-                                                                                                            ) 
+    geom_vline(data=Optimum,aes(xintercept = EXPRESSION*100),linetype=1, color="firebrick")+
+    geom_vline(data=Optimum,aes(xintercept = MaxExp*100),linetype=1, color="firebrick")+
+    facet_wrap2(~factor(ENVIRONMENT, levels = c("GLUCOSE","GALACTOSE",
+                                                "GLYCEROL","ETHANOL")), ncol=4,
+                strip = strip_themed(
+                  background_x = elem_list_rect(
+                    fill = c("#56B4E9","#009E73","#D55E00","#0072B2"),color= rep("transparent",4))
+                ) 
     )+
     scale_y_continuous(limits = c(0.94,1.05))+
     # scale_color_manual(values = c("#E6AB02", "#66A61E"))+
@@ -689,8 +1150,14 @@ dev.off()
             color="transparent", fill="grey90"))
 )
 
-(Sup_Fig4B<-as_tibble(CombDat_NLR) %>% 
+(Sup_Fig4B_rev<-as_tibble(CombDat_NLR_short) %>% 
     mutate(N=as.numeric(as.character(N))) %>% 
+    mutate(CV_SE_HIGH= YFP.CV.RELATIVE.MEAN+1.96*YFP.CV.RELATIVE.SD/sqrt(N),
+           CV_SE_LOW= YFP.CV.RELATIVE.MEAN-1.96*YFP.CV.RELATIVE.SD/sqrt(N)) %>% 
+    mutate(Category=if_else( (DeltaCV < 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)), "Low Noise",
+                             if_else((DeltaFANO > 0.0 & !between(DeltaCV_pred, CV_SE_LOW,CV_SE_HIGH)),
+                                     "High Noise", "Undetermined"))) %>% 
+    filter(Category!="Undetermined") %>% 
     mutate(Category=if_else(DeltaCV < 0.01, "Delta-SD<1%","Delta-SD>1%")) %>% 
     mutate(YFP.MEDIAN.RELATIVE.MEAN=100*YFP.MEDIAN.RELATIVE.MEAN,
            YFP.SD.RELATIVE.MEAN=100*YFP.SD.RELATIVE.MEAN,
@@ -732,10 +1199,10 @@ dev.off()
             color="transparent", fill="grey90"))
 )
 
-(SupFig_S4 <-
+(SupFig_S4_rev <-
     ggdraw() +
-    draw_plot(Sup_Fig4B,x = 0, y = 0,width = 1,height = 0.7)+ 
-    draw_plot(Sup_Fig4A,x = 0, y = 0.7,width = 1,height = 0.3)+
+    draw_plot(Sup_Fig4B_rev,x = 0, y = 0,width = 1,height = 0.7)+ 
+    draw_plot(Sup_Fig4A_rev,x = 0, y = 0.7,width = 1,height = 0.3)+
     draw_label(x=0.07,y=0.98,label = "A", color = "black", size = 16, fontface = "bold")+
     draw_label(x=0.31,y=0.98,label = "B", color = "black", size = 16, fontface = "bold")+
     draw_label(x=0.54,y=0.98,label = "C", color = "black", size = 16, fontface = "bold")+
@@ -750,12 +1217,12 @@ dev.off()
     draw_label(x=0.78,y=0.33,label = "L", color = "black", size = 16, fontface = "bold")
 )
 
-tiff("Plots/SupFig_S4.tiff",width=16,height =12,units="in",res=300)
-SupFig_S4
+tiff("Plots/SupFig_S4_rev.tiff",width=16,height =12,units="in",res=300)
+SupFig_S4_rev
 dev.off()
 
-png("Plots/SupFig_S4.png",width=16,height =12,units="in",res=300)
-SupFig_S4
+png("Plots/SupFig_S4_rev.png",width=16,height =12,units="in",res=300)
+SupFig_S4_rev
 dev.off()
 
 ## Write final Fitness estimates
