@@ -24,7 +24,7 @@ ParentDirectory:
 Data directory has all the raw and initial files required to reproduce the analysis
 
 ```
-ls Data/*
+$ ls Data/*
 
 ```
 #### Scipt Descriptions:
