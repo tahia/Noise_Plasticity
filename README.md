@@ -25,7 +25,6 @@ Data directory has all the raw and initial files required to reproduce the analy
 
 ```
 $ ls Data/*
-
 ```
 #### Scipt Descriptions:
 ```
@@ -73,7 +72,10 @@ SciPy\
 DEAP
 
 Install the required packages with:
-pip install numpy pandas scipy deap
+
+```
+$ pip install numpy pandas scipy deap
+```
 
 Basic usage:
 
