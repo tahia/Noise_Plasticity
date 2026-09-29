@@ -105,6 +105,7 @@ Therefore, the initial combined population size is:
 \
 \
 Initial expression values are independently sampled from normal distributions:\
+\
 Population A: Normal(EXPR_MEAN_A, EXPR_SD_A)\
 Population B: Normal(EXPR_MEAN_B, EXPR_SD_B)
 \
@@ -113,6 +114,7 @@ Offspring expression values are clipped to:
 
 Fitness
 An individual’s fitness is the reciprocal of its predicted doubling time:\
+\
 fitness = 1 / doubling_time(expression)\
 Individuals with shorter doubling times therefore have greater fitness and are more likely to be selected as parents.
 Selection is performed using DEAP’s roulette-wheel selection:
