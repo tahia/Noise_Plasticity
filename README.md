@@ -6,7 +6,7 @@
 
 #### Last modified: 09/29/2026
 
-### Clone the github repository 
+#### Clone this github repository 
 
 ```
 $ git clone https://github.com/tahia/Noise_Plasticity.git
