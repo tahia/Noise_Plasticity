@@ -59,6 +59,7 @@ A population label (A or B)
 A fitness determined by the reciprocal of its expression-dependent doubling time
 
 At each simulation step, individuals are selected using fitness-proportionate roulette selection. Offspring expression is determined by the parent’s expression, population-specific baseline parameters, heritability, and a constant environmental-noise component.
+
 The script supports Gaussian, log-normal, and two-component mixture fitness functions. Summary statistics are written to a CSV file for each time point and replicate simulation.
 
 To run multiple parameters (expression, noise, and different fitness functions) simultatnously, please use MakeSimJobs.R. 
