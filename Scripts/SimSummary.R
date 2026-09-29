@@ -1,7 +1,7 @@
 library(ggplot2)
 library(tidyverse)
 
-setwd("current/path")
+setwd("Noise_Plasticity/")
 source("Scripts/SimparseFunctions.R")
 
 ######## Figure 4

@@ -9,7 +9,7 @@ library(stringr)
 library(readxl)
 library(ggpubr)
 
-setwd("/home/taslima/data/WittkoppLab/Research_Projects/PlasticNoise/")
+setwd("Noise_Plasticity")
 
 # REF Strain descriptions: 
 # Y1617 : EXP WT

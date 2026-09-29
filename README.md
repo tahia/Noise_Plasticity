@@ -23,7 +23,7 @@ ParentDirectory:
 
 Data directory has all the raw and initial files required to reproduce the analysis
 
-```
+```{bash}
 ls Data/*
 
 ```

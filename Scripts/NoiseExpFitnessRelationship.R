@@ -12,7 +12,7 @@ library(ggpubr)
 library(cowplot)
 library(ggh4x)
 
-setwd("/home/taslima/data/WittkoppLab/Research_Projects/PlasticNoise/")
+setwd("Noise_Plasticity")
 
 ################## Joint analysis for expression-noise-fitness begins here #####################3
 # Read expression data (Supplementary Table 6)
@@ -151,6 +151,7 @@ for (i in ENVs) {
                           Pval=as.numeric(LM_Cor_FANO$p.value), ENVIRONMENT=rep(i,1) )))
 }
 
+#Gather non-linear model statistics
 CombDat_NLR<-rbind(CombDat_GLUCOSE,CombDat_GALACTOSE,CombDat_GLYCEROL, CombDat_ETHANOL) %>% 
   mutate(Class= case_when(STRAIN %in% c("Y1002","Y2675", "Y1617") ~ "REF",
                           STRAIN %in% c("Y1898","Y1960","Y1897","Y1896",
@@ -476,6 +477,7 @@ get_legend<-function(myggplot){
 }
 
 legend <-get_legend(dum)
+
 ## Fano
 (Sup_Exp_Noise_FANO_rev<-as_tibble(CombDat_NLR) %>%
     mutate(N=as.numeric(as.character(N))) %>%
@@ -748,8 +750,6 @@ Optimum_max<-rbind(Concat_Model_Fitness[Concat_Model_Fitness$ENVIRONMENT=="GLUCO
                                                                                                 - (max_fitness[4] -max_fitness[4]*0.005)))[c(1:10)],]
 )
 
-#This with summarized fitness from Mo
-#Optimum<-Optimum[c(1,14,22,31),]
 Optimum<-Optimum[c(9,18,23,39),] #get the minimum expression
 Optimum_max<-c(1.734223,1.910615,1.952407,2.025618)
 Optimum$Threshold<-(max_fitness- max_fitness*0.005)
@@ -893,14 +893,6 @@ CombDat_NLR_short<-CombDat_NLR %>%
             color="transparent", fill="grey90"))
 )
 
-# (Fig3 <-
-#     ggdraw() +
-#     draw_plot(Fig3B,x = 0, y = 0,width = 1,height = 0.7)+ 
-#     draw_plot(Fig3A,x = 0, y = 0.7,width = 1,height = 0.3)+
-#     draw_label(x=0.04,y=0.985,label = "A)", color = "black", size = 16, fontface = "bold")+
-#     draw_label(x=0.04,y=0.7,label = "B)", color = "black", size = 16, fontface = "bold")+
-#     draw_label(x=0.04,y=0.35,label = "C)", color = "black", size = 16, fontface = "bold")
-# )
 
 (Fig3_rev <-
     ggdraw() +
