@@ -104,7 +104,7 @@ Therefore, the initial combined population size is:
 2 × pop_size\
 Initial expression values are independently sampled from normal distributions:\
 Population A: Normal(EXPR_MEAN_A, EXPR_SD_A)\
-Population B: Normal(EXPR_MEAN_B, EXPR_SD_B)\
+Population B: Normal(EXPR_MEAN_B, EXPR_SD_B)
 \
 Offspring expression values are clipped to:
 0.01 ≤ expression ≤ 2.0
